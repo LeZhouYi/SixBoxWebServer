@@ -1,0 +1,4 @@
+{
+    "_white_bg": "*#_white_bg { background-color: #FFFFFF; }",
+    "_test_bg": "*#_test_bg { background-color: #000000; }"
+}
