@@ -1,4 +1,14 @@
 {
-    "_white_bg": "*#_white_bg { background-color: #FFFFFF; }",
-    "_test_bg": "*#_test_bg { background-color: #000000; }"
+    "*": {
+        "white_background": "#white_background {background-color: #FFFFFF;}",
+        "test_background": "#test_background {background-color: #000000;}"
+    },
+    "QWidget": {
+        "widget_base": "QWidget#widget_base {background-color: #D4CABE;}",
+        "widget_main": "QWidget#widget_main {background-color: #E6E1D8;}",
+        "gray_base": "QWidget#gray_base {background-color: #C5CCBC;}"
+    },
+    "QScrollArea": {
+        "scroll_main": "QWidget#widget_main {background-color: #E6E1D8;}"
+    }
 }

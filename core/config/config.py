@@ -22,10 +22,11 @@ __widget_config = load_json_data(get_config("widget_config"))
 __widget_css = load_json_data(get_config("widget_css"))
 
 
-def get_css(tag: str) -> str:
+def get_css(class_type: str, object_name: str) -> str:
     """
     根据tag获得对应style
-    :param tag: 标签
+    :param class_type: 控件对应的类型
+    :param object_name: 控件名称
     :return: 样式内容
     """
-    return __widget_css[tag]
+    return __widget_css[class_type][object_name]
