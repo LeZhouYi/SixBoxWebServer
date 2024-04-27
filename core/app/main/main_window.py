@@ -1,8 +1,8 @@
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QGuiApplication
-from PySide6.QtWidgets import QMainWindow, QHBoxLayout, QWidget, QSizePolicy, QScrollArea, QVBoxLayout, QPushButton
+from PySide6.QtGui import QGuiApplication, QPalette, QBrush
+from PySide6.QtWidgets import QMainWindow, QHBoxLayout, QWidget, QSizePolicy, QVBoxLayout
 
-from core.config import get_config
+from core.app.bookmark import BookmarkWidget
+from core.config import get_config, load_resource
 from core.widget import WidgetImpl
 
 
@@ -11,12 +11,12 @@ class MainWindow(QMainWindow, WidgetImpl):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.init_ui()
-        self.load_page()
+        # self.load_page()
 
     def init_ui(self):
         """初始化ui"""
         self.init_base_layout()
-        self.init_content_layout()
+        # self.init_content_layout()
 
     def init_content_layout(self):
         """初始化内容栏布局"""
@@ -27,29 +27,6 @@ class MainWindow(QMainWindow, WidgetImpl):
         content_layout.setContentsMargins(0, 0, 0, 0)
         content_widget.setLayout(content_layout)
         self.cache_widget(content_layout, "0006")
-        # 添加滚动容器
-        scroll_area = QScrollArea()
-        scroll_area.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
-        content_layout.addWidget(scroll_area)
-        self.set_css(scroll_area, "scroll_main", "QScrollArea")
-        self.cache_widget(scroll_area, "0007")
-        # 滚动容器内容
-        scroll_widget = QWidget()
-        scroll_widget.setMinimumWidth(500)
-        scroll_widget.setMinimumHeight(500)
-        scroll_area.setWidget(scroll_widget)
-        self.set_css(scroll_widget,"test_background")
-        self.cache_widget(scroll_widget, "0008")
-        # 滚动容器竖向布局
-        scroll_layout = QVBoxLayout()
-        scroll_widget.setLayout(scroll_layout)
-        self.cache_widget(scroll_layout, "0009")
-
-        for i in range(40):
-            button = QPushButton(f"Button {i + 1}")
-            button.setMinimumWidth(100)
-            button.setMinimumHeight(50)
-            scroll_layout.addWidget(button)
 
     def init_base_layout(self):
         """初始化基础布局"""
@@ -58,7 +35,6 @@ class MainWindow(QMainWindow, WidgetImpl):
         self.set_css(self, "white_background")
         # 设置中央窗口部件
         main_widget = QWidget()
-        self.set_css(main_widget, "widget_base", "QWidget")
         self.setCentralWidget(main_widget)
         self.cache_widget(main_widget, "0001")
         # 中央窗口水平布局
@@ -92,5 +68,9 @@ class MainWindow(QMainWindow, WidgetImpl):
 
     def load_page(self):
         """加载页面内容"""
-        # page_widget = BookmarkWidget()
-        # self.cache_widget(page_widget, "0005")
+        # 内容页
+        content_layout = self.get_widget("0006")
+        # 滚动内容为Bookmark
+        page_widget = BookmarkWidget()
+        content_layout.addWidget(page_widget)
+        self.cache_widget(page_widget, "0007")

@@ -1,7 +1,7 @@
 from typing import Union
 
 from PySide6.QtCore import QObject
-from PySide6.QtWidgets import QWidget, QLayout
+from PySide6.QtWidgets import QWidget, QLayout, QScrollArea
 
 from core.config import get_css
 
@@ -21,7 +21,7 @@ class WidgetImpl:
         assert key not in self.cache_widgets
         self.cache_widgets[key] = widget
 
-    def get_widget(self, key: str) -> Union[QWidget, QLayout]:
+    def get_widget(self, key: str) -> Union[QWidget, QLayout, QScrollArea]:
         """
         返回缓存的控件
         :param key: 控件关键字

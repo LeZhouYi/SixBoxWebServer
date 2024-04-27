@@ -1,5 +1,7 @@
 import configparser
 
+from PySide6.QtGui import QPixmap
+
 from core.util import load_json_data
 
 
@@ -20,6 +22,19 @@ __config = configparser.ConfigParser()
 __config.read("src/config/config.ini", encoding="utf-8")
 __widget_config = load_json_data(get_config("widget_config"))
 __widget_css = load_json_data(get_config("widget_css"))
+__resource_config = load_json_data(get_config("resource_config"))
+__resources = {}
+
+
+def load_resource(resource_key: str) -> QPixmap:
+    """
+    @param resource_key: 资源关键字
+    @return: 资源，通常是图片
+    """
+    assert resource_key in __resource_config
+    if resource_key not in __resources:
+        __resources[resource_key] = QPixmap(__resource_config[resource_key])
+    return __resources[resource_key]
 
 
 def get_css(class_type: str, object_name: str) -> str:
