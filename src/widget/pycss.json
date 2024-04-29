@@ -1,14 +1,38 @@
 {
-    "*": {
-        "white_background": "#white_background {background-color: #FFFFFF;}",
-        "test_background": "#test_background {background-color: #000000;}"
+    "#ice_background": {
+        "background-image": "url(src/textures/background/packed_ice.png);"
     },
-    "QWidget": {
-        "widget_base": "QWidget#widget_base {background-color: #D4CABE;}",
-        "widget_main": "QWidget#widget_main {background-color: #E6E1D8;}",
-        "gray_base": "QWidget#gray_base {background-color: #C5CCBC;}"
+    "#white_background": {
+        "background-color": "#FFFFFF;"
     },
-    "QScrollArea": {
-        "scroll_main": "QWidget#widget_main {background-color: #E6E1D8;}"
+    "#test_background": {
+        "background-color": "#000000;"
+    },
+    "#transparent": {
+        "background-color": "transparent;"
+    },
+    "QWidget#plant_ui": {
+        "border-width": "70px;",
+        "border-image": "url(src/textures/background/widgets.png) 70 70 70 70 stretch repeat;"
+    },
+    "QWidget#quartz_ui": {
+        "border-width": "10px;",
+        "border-image": "url(src/textures/background/quartz_block_bottom.png) 4 4 4 4 stretch repeat;"
+    },
+    "QScrollArea#quartz_ui": {
+        "border-width": "10px;",
+        "border-image": "url(src/textures/background/quartz_block_bottom.png) 4 4 4 4 stretch repeat;"
+    },
+    "QLabel#quartz_ui": {
+        "border-width": "10px;",
+        "border-image": "url(src/textures/background/quartz_block_bottom.png) 4 4 4 4 stretch repeat;",
+        "color": "#000000;",
+        "font-size": "16px;"
+    },
+    "QLineEdit#transparent": {
+        "background-color": "transparent;",
+        "color": "#000000;",
+        "font-size": "16px;",
+        "border": "none;"
     }
 }

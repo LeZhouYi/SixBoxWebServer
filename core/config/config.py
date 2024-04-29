@@ -1,7 +1,5 @@
 import configparser
 
-from PySide6.QtGui import QPixmap
-
 from core.util import load_json_data
 
 
@@ -22,19 +20,6 @@ __config = configparser.ConfigParser()
 __config.read("src/config/config.ini", encoding="utf-8")
 __widget_config = load_json_data(get_config("widget_config"))
 __widget_css = load_json_data(get_config("widget_css"))
-__resource_config = load_json_data(get_config("resource_config"))
-__resources = {}
-
-
-def load_resource(resource_key: str) -> QPixmap:
-    """
-    @param resource_key: 资源关键字
-    @return: 资源，通常是图片
-    """
-    assert resource_key in __resource_config
-    if resource_key not in __resources:
-        __resources[resource_key] = QPixmap(__resource_config[resource_key])
-    return __resources[resource_key]
 
 
 def get_css(class_type: str, object_name: str) -> str:
@@ -44,4 +29,15 @@ def get_css(class_type: str, object_name: str) -> str:
     :param object_name: 控件名称
     :return: 样式内容
     """
-    return __widget_css[class_type][object_name]
+    if class_type == "*":
+        data_key = "#%s" % object_name
+    else:
+        data_key = "%s#%s" % (class_type, object_name)
+    css = __widget_css[data_key]
+    if isinstance(css, dict):
+        content_str = ""
+        for css_key, css_value in css.items():
+            content_str = "%s%s:%s" % (content_str, css_key, css_value)
+        css = "%s {%s}" % (data_key, content_str)
+    __widget_css[data_key] = css
+    return css
