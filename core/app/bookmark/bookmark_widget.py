@@ -35,6 +35,8 @@ class BookmarkWidget(QWidget, WidgetImpl):
         scroll_area.setWidget(scroll_widget)
         self.set_css(scroll_widget, "transparent")
         self.cache_widget(scroll_widget, "B42")
+        # 滚动内容布局
+        
 
     def init_title_layout(self):
         """初始化标题栏"""
