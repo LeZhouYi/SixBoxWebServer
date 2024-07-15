@@ -41,7 +41,7 @@ class MusicServer:
         with self.thread_lock:
             return_data = []
             if extra_data is None:
-                extra_data = self.db.all();
+                extra_data = self.db.all()
             for data in extra_data:
                 return_item = {}
                 for key in keys:
@@ -62,6 +62,7 @@ class PlayCollectServer:
         self.rand = Random()
         self.thread_lock = threading.Lock()
 
+    # noinspection PyTypeChecker
     def add_data(self, data: dict, msc_server: MusicServer):
         """
         新增数据

@@ -42,7 +42,7 @@ class BookmarkServer:
         with self.thread_lock:
             key_list = ["name", "url", "parentId", "type"]
             data = data_utils.extra_data(data, key_list)
-            now_data = self.db.get(self.nb_query.id == bm_id)
+            now_data = self.db.get(self.bm_query.id == bm_id)
             data["parentId"] = now_data["parentId"]
             self.db.update(data_utils.extra_data(data, key_list), (self.bm_query.id == bm_id))
 
