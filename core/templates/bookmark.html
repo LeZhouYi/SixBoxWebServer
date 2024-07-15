@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六号盒子</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}"/>
+</head>
+<body>
+<div id="bodyContainer" class="bodyContainer">
+    <div class="bodyContent contentContainer">
+        <div class="header paddingExtra">
+            <img src="static/images/icons/bookmark.png" class="headerIcon">
+            <a class="headerText">书签</a>
+        </div>
+        <div class="pathBar paddingExtra">
+            <a class="pathBarText" href="/home.html">首页</a>
+            <a class="pathBarText">&gt;</a>
+            <a class="pathBarText" href="/bookmark.html?parentId=1">书签</a>
+        </div>
+        <div class="controlPanel paddingExtra">
+            <div class="searchBar">
+                <input id="searchBmInput" class="searchInput" placeholder="输入文本搜索">
+                <div id="searchBmButton" class="searchButton clickable">
+                    <a>搜索</a>
+                </div>
+            </div>
+            <div></div>
+            <div class="controlBar">
+                <div id="addBmButton" class="controlButton clickable">
+                    <a>新增书签</a>
+                </div>
+            </div>
+        </div>
+        <dl id="bmList" class="bmList marginExtra"></dl>
+    </div>
+</div>
+<div id="messagePopup" class="messagePopup hidden">
+    <div id="messageContent" class="messageContent"></div>
+</div>
+<div id="addBmPopup" class="popupOverlay hidden">
+    <div id="addBmContent" class="popupContent">
+        <div class="popupHeader">
+            <a class="headerText">新增书签</a>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">名称：</label>
+                <input type="text" id="addBmName" placeholder="请输入名称"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">链接：</label>
+                <input type="text" id="addBmUrl" placeholder="请输入链接"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputSelectField">
+                <label class="bmInputLabel">文件夹：</label>
+                <select id="addBmFolderSelect" class="bmInputSelect"></select>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputSelectField">
+                <label class="bmInputLabel">类型：</label>
+                <select id="addBmTypeSelect" class="bmInputSelect">
+                    <option value="1">书签</option>
+                    <option value="2">文件夹</option>
+                </select>
+            </div>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer gapDefault">
+            <div id="addBmCfmBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="addBmCclBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="bmControlPopup" class="popupOverlay hidden">
+    <div id="bmControlContent" class="controlContent">
+        <dl class="controlBtnList">
+            <dd><a id="editBmBtn">编辑</a></dd>
+            <dd><a id="deleteBmBtn">删除</a></dd>
+        </dl>
+    </div>
+</div>
+<div id="cfmDelPopup" class="popupOverlay hidden">
+    <div id="cfmDelContent" class="cfmDelContent">
+        <div class="header">
+            <a class="headerText">确认删除</a>
+        </div>
+        <div>
+            <div id="confirmDelBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="cancelDelBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="editBmPopup" class="popupOverlay hidden">
+    <div id="editBmContent" class="popupContent">
+        <div class="popupHeader">
+            <a class="headerText">编辑书签</a>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">名称：</label>
+                <input type="text" id="editBmName" placeholder="请输入名称"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">链接：</label>
+                <input type="text" id="editBmUrl" placeholder="请输入链接"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputSelectField">
+                <label class="bmInputLabel">文件夹：</label>
+                <select id="editBmFolderSelect" class="bmInputSelect"></select>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputSelectField">
+                <label class="bmInputLabel">类型：</label>
+                <select id="editBmTypeSelect" class="bmInputSelect">
+                    <option value="1">书签</option>
+                    <option value="2">文件夹</option>
+                </select>
+            </div>
+        </div>
+        <div class="bmInputContainer gapDefault">
+            <div id="editConfirmBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="editCancelBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="module" src="{{url_for('static', filename='js/sixbox/bookmark.js')}}"></script>
+</body>
+</html>

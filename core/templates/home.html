@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六号盒子</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}"/>
+</head>
+<body>
+<div id="bodyContainer" class="bodyContainer">
+    <div class="bodyContent contentContainer">
+        <div class="header paddingExtra">
+            <img src="static/images/icons/home.png" class="headerIcon">
+            <a class="headerText">六号盒子</a>
+        </div>
+        <div class="pathBar paddingExtra">
+            <a class="pathBarText" href="/home.html">首页</a>
+        </div>
+        <div class="content marginExtra">
+            <div class="appContainer">
+                <div id="appBookmark" class="appItem clickable">
+                    <img src="static/images/icons/bookmark.png">
+                    <a href="/bookmark.html?parentId=1">书签</a>
+                </div>
+                <div id="appNotebook" class="appItem clickable">
+                    <img src="static/images/icons/file_text.png">
+                    <a href="/notebook.html?parentId=1">笔记</a>
+                </div>
+                <div id="appMusicPlayer" class="appItem clickable">
+                    <img src="static/images/icons/music.png">
+                    <a href="/musicplayer.html">音乐盒</a>
+                </div>
+                <div id="appBackup" class="appItem clickable">
+                    <img src="static/images/icons/inbox.png">
+                    <a href="/backup.html">数据同步</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="module" src="{{url_for('static', filename='js/sixbox/home.js')}}"></script>
+</body>
+</html>

@@ -1,0 +1,810 @@
+/*基础设置*/
+body, html {
+    margin: 0;
+    padding: 0;
+    font-size: 100px;
+    background: #E0ECFE;
+}
+/*Body基础样式*/
+.bodyContainer{
+    display: flex;
+    justify-content: center;
+    background: #E0ECFE;
+}
+.bodyContent{
+    flex-grow: 1;
+    max-width: 740px;
+    margin: 10px;
+    box-sizing: border-box;
+}
+/*内容栏样式*/
+.contentContainer{
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+/*标题栏*/
+.header{
+    display: flex;
+    align-items: center;
+    height: 50px;
+}
+.headerIcon{
+    width: 25px;
+    height: 25px;
+    margin-right: 8px;
+}
+.headerText{
+    font-weight: bold;
+    font-size: .18rem;
+}
+/*导航栏*/
+.pathBar{
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+.pathBarText{
+    font-size: .16rem;
+    text-decoration: none;
+}
+.pathBarText:visited{
+    color: blue;
+}
+/*内容栏*/
+.content{
+    display: flex;
+    flex-grow: 1;
+    background: #EFF4FF;
+    border-radius: 5px;
+    padding: 20px;
+}
+/*应用程序容器*/
+.appContainer{
+    display: inline-block;
+    flex-grow: 1;
+    font-size: 0;
+}
+.appItem{
+    display: inline-flex;
+    vertical-align: top;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    background: #FFFFFF;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+}
+.appItem:hover{
+    background: #F5FFFA;
+    transition: background-color 0.3s ease;
+}
+.appItem>img{
+    width: 60px;
+    height: 60px;
+}
+.appItem>a{
+    font-size: .16rem;
+    overflow: hidden;
+    text-decoration: none;
+    color: blue;
+}
+
+/*默认弹窗容器样式*/
+.popupOverlay{
+    display: block; /* 默认情况下隐藏模态弹窗 */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+}
+
+
+/*popupMessage内容相关样式*/
+.messageContent{
+    align-items: center;
+    display: grid;
+    padding-left: 20px;
+    font-size: .14rem;
+}
+
+.controlBar{
+    height: 30px;
+    font-size: 0.14rem;
+    display: flex;
+    justify-content: center;
+}
+.controlButton{
+    background: #FFFFFF;
+    height: 100%;
+    width: 80px;
+    border: 2px solid #1C5765;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    font-size: 0.14rem;
+}
+.controlButton>a{
+    font-size: .14rem;
+    color: black;
+}
+.controlButton:hover{
+    background: #F5FFFA;
+    transition: background-color 0.3s ease;
+}
+
+/*搜索栏*/
+.searchBar{
+    height: 30px;
+    font-size: 0.14rem;
+    display: grid;
+    grid-template-columns: 1fr 80px;
+    align-items: center;
+    box-sizing: border-box;
+}
+.searchButton{
+    background: #FFFFFF;
+    height: 100%;
+    width: 80px;
+    border: 2px solid #1C5765;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+/*默认模态弹窗标题栏*/
+.popupHeader{
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+/*富文本输入项容器*/
+.nbInputContainer{
+    display: flex;
+    flex-direction: column;
+    padding: 5px 0;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+/*富文本输入栏*/
+.nbInputLabel{
+    height: 40px;
+    font-size: .16rem;
+    display: flex;
+    align-items: center;
+}
+.nbTinyMceField{
+    flex-grow: 1;
+}
+.nbTinyMceField>div:last-child{
+    border-color: #1C5765;
+}
+
+/*书签输入项容器*/
+.bmInputContainer{
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+/*书签输入项占位*/
+.bmInputSpan{
+    height: 10px;
+}
+/*书签输入项标签*/
+.bmInputLabel{
+    font-size: 0.16rem;
+    width: 70px;
+}
+/*书签输入项-文本输入类型*/
+.bmInputTextField{
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    height: 100%;
+    flex-grow: 1;
+    align-items: center;
+    font-size: 0.16rem;
+}
+.bmInputTextField>input{
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    padding: 5px 0;
+    padding-inline: 20px;
+    background: #FFFFFF;
+    border-style: solid;
+    border-color: #1C5765;
+    border-width: 2px;
+    border-radius: 5px;
+}
+.bmInputTextField>input:focus-visible{
+    outline: none;
+    box-shadow: none;
+}
+
+/*书签输入项-文件输入类型*/
+.bmInputFileField{
+    display: grid;
+    grid-template-columns: 70px 85px 1fr;
+    height: 100%;
+    flex-grow: 1;
+    align-items: center;
+    font-size: 0.16rem;
+}
+.bmInputFileField>input{
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    margin-right: 5px;
+    padding: 5px 0;
+    padding-inline: 20px;
+    background: #FFFFFF;
+    border-style: solid;
+    border-color: #1C5765;
+    border-width: 2px;
+    border-radius: 5px;
+}
+
+/*书签输入项-文本输入类型*/
+.bmInputSelectField{
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    height: 100%;
+    flex-grow: 1;
+    align-items: center;
+    font-size: 0.16rem;
+}
+
+/*书签列表*/
+.bmList{
+    background: #FFFFFF;
+    flex-grow: 1;
+    margin: 0;
+    padding: 20px 10px 0 10px;
+    border-radius: 10px;
+}
+/*书签的行*/
+.bmItem{
+    margin: 5px 10px;
+    padding: 1px 0;
+    display: grid;
+    grid-template-columns: 25px 1fr 25px;
+    gap: 5px;
+    align-items: center; /* 垂直居中对齐子元素（如果需要的话） */
+    color: blue;
+    font-size: 16px;
+}
+.bmItem:hover{
+    background-color: #F0F1F9;
+    transition: background-color 0.3s ease; /* 可选：添加过渡效果 */
+}
+.bmItem>a{
+    width: 100%;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+.bmItem>a:visited{
+    color: blue;
+}
+/*书签图标样式*/
+.bmIcon{
+    width: 25px;
+    height: 25px;
+}
+.bmIcon:hover{
+    background-color: #F0F1F9;
+    transition: background-color 0.3s ease; /* 可选：添加过渡效果 */
+}
+
+/*右侧显示的弹窗样式*/
+.rightCtrlContent{
+    display: block; /* 默认隐藏弹窗 */
+    position: fixed;
+    transform: translate(0, -50%);
+    border: 3px solid #1C5765;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+}
+
+/*操作弹窗样式*/
+.controlContent{
+    display: block; /* 默认隐藏弹窗 */
+    position: fixed;
+    transform: translate(-100%, -50%);
+    border: 3px solid #1C5765;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+}
+.controlBtnList{
+    display: grid;
+    gap: 10px;
+    margin: 10px 0;
+    font-size: 0.16rem;
+}
+.controlBtnList>dd{
+    margin: 0 5px;
+    width: 80px;
+    text-align: center;
+}
+.controlBtnList>dd:hover{
+    background: #F5FFFA;
+    transition: background-color 0.3s ease;
+}
+.controlBtnList>dd>a{
+    cursor: pointer;
+}
+
+/*确认删除弹窗*/
+.cfmDelContent>div:nth-child(1){
+    margin: auto;
+}
+.cfmDelContent>div:nth-child(2){
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 20px;
+}
+
+/*音乐播放器容器*/
+.musicPlayContainer{
+    background: #FFFFFF;
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+}
+/*音乐封面容器*/
+.coverContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 5px;
+    min-width: 60px;
+    max-width: 80px;
+    margin: auto;
+}
+.coverContainer>img{
+    height: width;
+    width: 100%;
+    border-radius: 5px;
+    background: #336699;
+}
+/*音乐控制容器*/
+.mpCtrlContainer{
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    box-sizing: border-box;
+}
+/*音乐进度栏*/
+.musicScrollBar{
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    align-items: center;
+    font-size: 0.14rem;
+    box-sizing: border-box;
+    padding: 10px;
+    gap: 10px;
+}
+.musicScrollBar>div{
+    display: flex;
+    justify-content: center;
+    align-center: center;
+    width: 40px;
+}
+.musicProcess{
+    flex-grow: 1;
+    width: 100%;
+}
+/*音乐控制按钮面板*/
+.musicCtrlPanel{
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr 3fr;
+    height: 50px;
+    align-items: center;
+    box-sizing: border-box;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    gap: 10px;
+}
+.musicCtrlPanel>img{
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+.musicCtrlPanel>img:hover{
+    border: 2px solid #336699;
+}
+.musicCtrlPanel>img:nth-child(2), .musicCtrlPanel>img:nth-child(3), .musicCtrlPanel>img:nth-child(4){
+    margin: auto;
+}
+.musicCtrlPanel>img:nth-child(5){
+    margin-inline-start: auto;
+}
+
+/*音乐播放器导航路径*/
+.musicPathBar{
+    margin: 5px 10px;
+    padding: 1px 0;
+    display: grid;
+    grid-template-columns: 25px 1fr;
+    gap: 5px;
+    font-size: 0.16rem;
+    align-items: center; /* 垂直居中对齐子元素（如果需要的话） */
+}
+.musicPathBar>div{
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    color: black;
+    gap: 5px;
+    width: 100%;
+    align-items: center; /* 垂直居中对齐子元素（如果需要的话） */
+}
+.musicPathBar>div>a:last-child{
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.musicPathBar>div>a:first-child{
+    color: blue;
+}
+
+/*音乐合集操作栏*/
+.musicCtrlBar{
+    margin: 5px 10px;
+    padding: 1px 0;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #336699;
+    display: grid;
+    grid-template-columns: 1fr 80px 30px;
+    gap: 5px;
+    font-size: 0.16rem;
+    align-items: center; /* 垂直居中对齐子元素（如果需要的话） */
+    overflow: hidden;
+    height: 30px;
+}
+
+/*音乐合集操作栏*/
+.musicCtrlIcon{
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    border: 2px solid #1C5765;
+    box-sizing: border-box;
+}
+
+@media (max-device-width: 600px){
+    .paddingExtra{
+        padding-left: 5px;
+    }
+    .marginExtra{
+        margin-left: 0;
+    }
+    .rightExtra{
+        margin-right: 0;
+    }
+    /*操作栏*/
+    .controlPanel{
+        min-height: 40px;
+        margin-bottom: 10px;
+        gap: 5px;
+        display: grid;
+        grid-template-columns: 3fr 0 1fr;
+        align-items: center;
+        font-size: 0;
+    }
+    /*音乐内容栏*/
+    .mpContent{
+        display: grid;
+        grid-template-rows: 100px 1fr;
+        gap: 20px;
+        flex-grow: 1;
+        padding: 10px 0;
+    }
+    /*弹窗消息容器*/
+    .messagePopup
+    {
+        display: block; /* 默认隐藏弹窗 */
+        position: fixed;
+        top: 5%;
+        left: 50%;
+        width: calc(100% - 60px);
+        transform: translate(-50%, -50%);
+        border: 3px solid #1C5765;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #FFFFFF;
+        z-index: 1;
+    }
+    /*默认模态弹窗内容*/
+    .popupContent{
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        width: calc(100% - 60px);
+        transform: translate(-50%, -50%);
+        border: 3px solid #1C5765;
+        border-radius: 5px;
+        background-color: #FFFFFF;
+        font-size: .16rem;
+        padding: 0 20px 20px 20px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+    /*笔记模态弹窗内容*/
+    .nbPopupContent{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: calc(100% - 60px);
+        transform: translate(-50%, -50%);
+        border: 3px solid #1C5765;
+        border-radius: 5px;
+        background-color: #FFFFFF;
+        font-size: .16rem;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+    /*笔记模态弹窗内容-纯显示*/
+    .nbPopupDisplay{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: calc(100% - 60px);
+        height: 90%;
+        transform: translate(-50%, -50%);
+        border: 3px solid #1C5765;
+        border-radius: 5px;
+        background-color: #FFFFFF;
+        font-size: .16rem;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+    /*搜索栏输入*/
+    .searchInput{
+        background: #FFFFFF;
+        height: 100%;
+        width: 100%;
+        padding-inline: 20px;
+        box-sizing: border-box;
+        border-style: solid;
+        border-color: #1C5765;
+        border-width: 2px 0 2px 2px;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        outline: none;
+        box-shadow: none;
+    }
+    /*书签输入下拉选择框*/
+    .bmInputSelect{
+        box-sizing: border-box;
+        height: 100%;
+        padding: 5px 0;
+        background: #FFFFFF;
+        border-style: solid;
+        border-color: #1C5765;
+        border-width: 2px;
+        border-radius: 5px;
+        padding-left: 15px;
+    }
+    /*确认删除弹窗*/
+    .cfmDelContent{
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        width: calc(100% - 60px);
+        transform: translate(-50%, -50%);
+        border: 3px solid #1C5765;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: rgba(255,255,255,1);
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        gap: 5px;
+        align-items: center;
+        box-sizing: border-box;
+        font-size: 0.16rem;
+    }
+}
+
+/*操作弹窗样式*/
+.volumeCtrlContent{
+    display: block; /* 默认隐藏弹窗 */
+    position: fixed;
+    transform: translate(-100%, -50%);
+    border: 3px solid #1C5765;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    height: 40px;
+    margin: auto;
+}
+.volumeCtrlContent>div{
+    height: 40px;
+    display: grid;
+}
+
+@media (min-device-width: 601px){
+    /*操作栏*/
+    .controlPanel{
+        min-height: 40px;
+        margin-bottom: 10px;
+        gap: 10px;
+        display: grid;
+        grid-template-columns: 3fr 1fr 1fr;
+        align-items: center;
+        font-size: 0;
+    }
+    .paddingExtra{
+        padding-left: 20px;
+    }
+    .marginExtra{
+        margin-left: 20px;
+    }
+    .rightExtra{
+        margin-right: 20px;
+    }
+    /*音乐内容栏*/
+    .mpContent{
+        display: grid;
+        grid-template-rows: 100px 1fr;
+        gap: 20px;
+        flex-grow: 1;
+        padding: 10px 20px;
+    }
+    /*弹窗消息容器*/
+    .messagePopup
+    {
+        display: block; /* 默认隐藏弹窗 */
+        position: fixed;
+        top: 5%;
+        left: 50%;
+        width: 500px;
+        transform: translate(-50%, -50%);
+        border: 3px solid #1C5765;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #FFFFFF;
+        z-index: 1;
+        box-sizing: border-box;
+    }
+    /*默认模态弹窗内容*/
+    .popupContent{
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        width: 500px;
+        transform: translate(-50%, -50%);
+        border: 3px solid #1C5765;
+        border-radius: 5px;
+        background-color: #FFFFFF;
+        font-size: .16rem;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+    /*笔记模态弹窗内容*/
+    .nbPopupContent{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 50%;
+        min-width: 500px;
+        transform: translate(-50%, -50%);
+        border: 3px solid #1C5765;
+        border-radius: 5px;
+        background-color: #FFFFFF;
+        font-size: .16rem;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+    /*笔记模态弹窗内容-纯显示*/
+    .nbPopupDisplay{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 50%;
+        height: 90%;
+        min-width: 500px;
+        transform: translate(-50%, -50%);
+        border: 3px solid #1C5765;
+        border-radius: 5px;
+        background-color: #FFFFFF;
+        font-size: .16rem;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+
+    /*搜索栏输入*/
+    .searchInput{
+        background: #FFFFFF;
+        height: 100%;
+        padding-inline: 20px;
+        box-sizing: border-box;
+        border-style: solid;
+        border-color: #1C5765;
+        border-width: 2px 0 2px 2px;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        outline: none;
+        box-shadow: none;
+    }
+    /*书签输入下拉选择框*/
+    .bmInputSelect{
+        box-sizing: border-box;
+        height: 100%;
+        padding: 5px 0;
+        background: #FFFFFF;
+        border-style: solid;
+        border-color: #1C5765;
+        border-width: 2px;
+        border-radius: 5px;
+        padding-left: 15px;
+    }
+    /*确认删除弹窗*/
+    .cfmDelContent{
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        width: 300px;
+        transform: translate(-50%, -50%);
+        border: 3px solid #1C5765;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: rgba(255,255,255,1);
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        gap: 5px;
+        align-items: center;
+        box-sizing: border-box;
+        font-size: 0.16rem;
+    }
+}
+
+/*隐藏元素*/
+.hidden{
+    display: none; /* 默认隐藏弹窗 */
+}
+/*可操作鼠标样式*/
+.clickable{
+    cursor: pointer;
+}
+/*默认间距*/
+.gapDefault{
+    gap: 20px;
+}
+/*模态弹窗开启时禁用页面滚动*/
+.modalOpen{
+    overflow: hidden;
+}
+
+#musicMoreCtrlBtn{
+    transform: rotate(90deg);
+}

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六号盒子</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}"/>
+</head>
+<body>
+<div id="bodyContainer" class="bodyContainer">
+    <div class="bodyContent contentContainer">
+        <div class="header paddingExtra">
+            <img src="static/images/icons/music.png" class="headerIcon">
+            <a class="headerText">音乐盒</a>
+        </div>
+        <div class="pathBar paddingExtra">
+            <a class="pathBarText" href="/home.html">首页</a><a class="pathBarText">&gt;音乐盒</a>
+        </div>
+        <div class="mpContent">
+            <div class="musicPlayContainer">
+                <div class="coverContainer">
+                    <img src="static/images/icons/white_music.png">
+                </div>
+                <div class="mpCtrlContainer">
+                    <div class="musicScrollBar">
+                        <div>
+                            <a id="nowPlayTime">00:00</a>
+                        </div>
+                        <input type="range" min="0" max="100" value="0" id="musicProgress" step="0.1" class="musicProcess clickable">
+                        <div>
+                            <a id="musicEndTime">xx:xx</a>
+                        </div>
+                    </div>
+                    <div class="musicCtrlPanel">
+                        <img class="clickable" id="repeatModeBtn" src="static/images/icons/repeat.png">
+                        <img class="clickable" id="skipBackBtn" src="static/images/icons/skip_back.png">
+                        <img class="clickable" id="playPauseBtn" src="static/images/icons/play.png">
+                        <img class="clickable" id="skipForwardBtn" src="static/images/icons/skip_forward.png">
+                        <img class="clickable" id="musicVolumeBtn" src="static/images/icons/volume_1.png">
+                    </div>
+                </div>
+            </div>
+            <dl id="mpList" class="bmList">
+                <dd class="musicPathBar">
+                    <img id="playCollectBtn" class="bmIcon clickable" src="static/images/icons/menu.png">
+                    <div>
+                        <a id="nowPlayCollectText" class="clickable">全部列表</a>
+                        <a id="nowPlayMusicText">&gt;&nbsp;正在播放:&nbsp;无</a>
+                    </div>
+                </dd>
+                <dd class="musicCtrlBar">
+                    <div class="searchBar rightExtra">
+                        <input id="searchMscInput" class="searchInput" placeholder="输入文本搜索">
+                        <div id="searchMscButton" class="searchButton clickable">
+                            <a>搜索</a>
+                        </div>
+                    </div>
+                    <div id="uploadMscButton" class="controlButton clickable">
+                        <a>上传音乐</a>
+                    </div>
+                    <img id="musicMoreCtrlBtn" src="static/images/icons/more_vertical.png" class="musicCtrlIcon">
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>
+<div id="messagePopup" class="messagePopup hidden">
+    <div id="messageContent" class="messageContent"></div>
+</div>
+<div id="addMscPopup" class="popupOverlay hidden">
+    <div id="addMscContent" class="popupContent">
+        <div class="popupHeader">
+            <a class="headerText">上传音乐</a>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">名称：</label>
+                <input type="text" id="addMscName" placeholder="请输入名称"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">歌手：</label>
+                <input type="text" id="addMscArtist" placeholder="请输入歌手"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">专辑：</label>
+                <input type="text" id="addMscAlbum" placeholder="请输入专辑"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputFileField">
+                <label class="bmInputLabel">音频：</label>
+                <input type="file" id="addMscFile" placeholder="请输入专辑" class="clickable hidden" accept="audio/mpeg"/>
+                <label for="addMscFile" class="controlButton clickable">选择文件</label>
+                <input type="text" id="addMscFileText" placeholder="请选择音频文件" disabled>
+            </div>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer gapDefault">
+            <div id="addMscCfmBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="addMscCclBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="mscVolumePopup" class="popupOverlay hidden">
+    <div id="mscVolumeContent" class="volumeCtrlContent">
+        <div>
+            <input type="range" min="0" max="100" value="0" id="volumeProgress" step="0.1" class="clickable">
+        </div>
+    </div>
+</div>
+<div id="mscControlPopup" class="popupOverlay hidden">
+    <div id="mscControlContent" class="controlContent">
+        <dl class="controlBtnList">
+            <dd><a id="downloadMscBtn">下载</a></dd>
+            <dd><a id="editMscBtn">编辑</a></dd>
+            <dd><a id="deleteMscBtn">删除</a></dd>
+        </dl>
+    </div>
+</div>
+<div id="cfmDelPopup" class="popupOverlay hidden">
+    <div id="cfmDelContent" class="cfmDelContent">
+        <div class="header">
+            <a class="headerText">确认删除</a>
+        </div>
+        <div>
+            <div id="confirmDelBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="cancelDelBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="editMscPopup" class="popupOverlay hidden">
+    <div id="editMscContent" class="popupContent">
+        <div class="popupHeader">
+            <a class="headerText">上传音乐</a>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">名称：</label>
+                <input type="text" id="editMscName" placeholder="请输入名称"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">歌手：</label>
+                <input type="text" id="editMscArtist" placeholder="请输入歌手"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">专辑：</label>
+                <input type="text" id="editMscAlbum" placeholder="请输入专辑"/>
+            </div>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer gapDefault">
+            <div id="editMscCfmBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="editMscCclBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="mscCollectPopup" class="popupOverlay hidden">
+    <div id="mscCollectContent" class="rightCtrlContent">
+        <dl id="mscCollectList" class="controlBtnList">
+        </dl>
+    </div>
+</div>
+<script type="module" src="{{url_for('static', filename='js/howler/howler.js')}}"></script>
+<script type="module" src="{{url_for('static', filename='js/sixbox/music_player.js')}}"></script>
+</body>
+</html>

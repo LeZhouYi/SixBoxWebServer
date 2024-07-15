@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六号盒子</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}"/>
+</head>
+<body>
+<div id="bodyContainer" class="bodyContainer">
+    <div class="bodyContent contentContainer">
+        <div class="header paddingExtra">
+            <img src="static/images/icons/file_text.png" class="headerIcon">
+            <a class="headerText">笔记</a>
+        </div>
+        <div class="pathBar paddingExtra">
+            <a class="pathBarText" href="/home.html">首页</a><a class="pathBarText">&gt;笔记</a>
+        </div>
+        <div class="controlPanel paddingExtra">
+            <div class="searchBar">
+                <input id="searchNbInput" class="searchInput" placeholder="输入文本搜索">
+                <div id="searchNbButton" class="searchButton clickable">
+                    <a>搜索</a>
+                </div>
+            </div>
+            <div></div>
+            <div class="controlBar">
+                <div id="addNbButton" class="controlButton clickable">
+                    <a>新增笔记</a>
+                </div>
+            </div>
+        </div>
+        <dl id="nbList" class="bmList marginExtra"></dl>
+    </div>
+</div>
+<div id="messagePopup" class="messagePopup hidden">
+    <div id="messageContent" class="messageContent"></div>
+</div>
+<div id="addNbPopup" class="popupOverlay hidden">
+    <div id="addNbContent" class="nbPopupContent">
+        <div class="popupHeader">
+            <a class="headerText">新增笔记</a>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">名称：</label>
+                <input type="text" id="addNbName" placeholder="请输入名称"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputSelectField">
+                <label class="bmInputLabel">文件夹：</label>
+                <select id="addNbFolderSelect" class="bmInputSelect"></select>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputSelectField">
+                <label class="bmInputLabel">类型：</label>
+                <select id="addNbTypeSelect" class="bmInputSelect">
+                    <option value="1">笔记</option>
+                    <option value="2">文件夹</option>
+                </select>
+            </div>
+        </div>
+        <div id="addNbMceContainer" class="nbInputContainer">
+            <div class="nbTinyMceField">
+                <div class="nbInputLabel">
+                    <label>笔记内容：</label>
+                </div>
+                <div id="addNbTinyMce"></div>
+            </div>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer gapDefault">
+            <div id="addConfirmBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="addCancelBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="nbControlPopup" class="popupOverlay hidden">
+    <div id="nbControlContent" class="controlContent">
+        <dl class="controlBtnList">
+            <dd><a id="editNbBtn">编辑</a></dd>
+            <dd><a id="deleteNbBtn">删除</a></dd>
+        </dl>
+    </div>
+</div>
+<div id="cfmDelPopup" class="popupOverlay hidden">
+    <div id="cfmDelContent" class="cfmDelContent">
+        <div class="header">
+            <a class="headerText">确认删除</a>
+        </div>
+        <div>
+            <div id="confirmDelBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="cancelDelBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="editNbPopup" class="popupOverlay hidden">
+    <div id="editNbContent" class="nbPopupContent">
+        <div class="popupHeader">
+            <a class="headerText">编辑笔记</a>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">名称：</label>
+                <input type="text" id="editNbName" placeholder="请输入名称"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputSelectField">
+                <label class="bmInputLabel">文件夹：</label>
+                <select id="editNbFolderSelect" class="bmInputSelect"></select>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputSelectField">
+                <label class="bmInputLabel">类型：</label>
+                <select id="editNbTypeSelect" class="bmInputSelect">
+                    <option value="1">笔记</option>
+                    <option value="2">文件夹</option>
+                </select>
+            </div>
+        </div>
+        <div id="editNbMceContainer" class="nbInputContainer">
+            <div class="nbTinyMceField">
+                <div class="nbInputLabel">
+                    <label>笔记内容：</label>
+                </div>
+                <div id="editNbTinyMce"></div>
+            </div>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer gapDefault">
+            <div id="editConfirmBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="editCancelBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="readNbPopup" class="popupOverlay hidden">
+    <div id="readNbContent" class="nbPopupDisplay">
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">名称：</label>
+                <input type="text" id="displayNbName" placeholder="请输入名称"/>
+            </div>
+        </div>
+        <div class="nbInputContainer">
+            <div class="nbTinyMceField">
+                <div class="nbInputLabel">
+                    <label>笔记内容：</label>
+                </div>
+                <div id="displayNbTinyMce"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="module" src="{{url_for('static', filename='js/tinymce/tinymce.min.js')}}" referrerpolicy="origin"
+        defer></script>
+<script type="module" src="{{url_for('static', filename='js/sixbox/notebook.js')}}"></script>
+</body>
+</html>

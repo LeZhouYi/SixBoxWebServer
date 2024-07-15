@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六号盒子</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}"/>
+</head>
+<body>
+<div id="bodyContainer" class="bodyContainer">
+    <div class="bodyContent contentContainer">
+        <div class="header paddingExtra">
+            <img src="static/images/icons/inbox.png" class="headerIcon">
+            <a class="headerText">备份</a>
+        </div>
+        <div class="pathBar paddingExtra">
+            <a class="pathBarText" href="/home.html">首页</a><a class="pathBarText">&gt;备份</a>
+        </div>
+        <div class="content marginExtra">
+            <div class="appContainer">
+                <div id="appDownData" class="appItem clickable">
+                    <img src="static/images/icons/download.png">
+                    <a>下载数据</a>
+                </div>
+                <label for="uploadFileField" id="appUploadData" class="appItem clickable">
+                    <input type="file" id="uploadFileField" placeholder="请选择文件" class="clickable hidden">
+                    <img src="static/images/icons/download.png">
+                    <a>上传文件</a>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="messagePopup" class="messagePopup hidden">
+    <div id="messageContent" class="messageContent"></div>
+</div>
+<script type="module" src="{{url_for('static', filename='js/sixbox/backup.js')}}"></script>
+</body>
+</html>
