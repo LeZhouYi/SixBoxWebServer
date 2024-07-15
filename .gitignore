@@ -1,4 +1,10 @@
+# env
 .venv/
 .idea/
+
+# python
 __pycache__/
+
+# data
 data/
+!core/data/
