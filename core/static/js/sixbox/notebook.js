@@ -161,7 +161,6 @@ var menubarSet = 'edit insert format tools'
 
 tinymce.init({
     selector: '#displayNbTinyMce',
-    inline: true,
     branding: true,
     elementpath: false,
     menubar: false,
@@ -171,8 +170,8 @@ tinymce.init({
     license_key: 'gpl',
     plugins: '',
     toolbar: false,
-    height: 'calc(100% - 40px)',
-    readonly: true
+    readonly: true,
+    height: '100%'
 });
 
 tinymce.init({
@@ -185,7 +184,8 @@ tinymce.init({
     promotion: false,
     license_key: 'gpl',
     plugins: 'lists wordcount advlist code charmap insertdatetime preview',
-    toolbar: toolbar
+    toolbar: toolbar,
+    height: '350px'
 });
 
 tinymce.init({
@@ -199,6 +199,7 @@ tinymce.init({
     license_key: 'gpl',
     plugins: 'lists wordcount advlist code charmap insertdatetime preview',
     toolbar: toolbar,
+    height: '350px'
 });
 
 document.addEventListener('click', function (event) {

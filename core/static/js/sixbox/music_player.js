@@ -195,14 +195,6 @@ document.getElementById('playPauseBtn').addEventListener('click', function(){
     }
 });
 
-window.onload = function(){
-    BaseUtils.resizeFullScreen();
-};
-
-window.addEventListener('resize', BaseUtils.throttle(function(){
-    BaseUtils.resizeFullScreen();
-}), 200);
-
 document.getElementById('addMscFile').addEventListener('change', function(event){
     var file = event.target.files[0];
     if (file){
@@ -542,3 +534,11 @@ document.getElementById('searchMscInput').addEventListener('keydown', function()
         document.getElementById('searchMscButton').click();
     }
 });
+
+window.onload = function(){
+    BaseUtils.resizeFullScreen('bodyContainer');
+};
+
+window.addEventListener('resize', BaseUtils.throttle(function(){
+    BaseUtils.resizeFullScreen('bodyContainer');
+}), 200);

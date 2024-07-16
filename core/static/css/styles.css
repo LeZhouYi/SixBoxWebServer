@@ -1,20 +1,82 @@
+/*--------------基础属性--------------*/
+:root {
+    --base-font-size: 100px;  /*其它字体均以此为基准*/
+    --base-margin: 10px; /*基础边缘宽度*/
+    --page-background: #E0ECFE;  /*页面背影颜色*/
+    --control-background: #FFFFFF;  /*可操作元素基础背影颜色*/
+    --outline-focus-visible: 2px auto #FF9999;  /*元素被聚焦时*/
+    --max-page-width: 740px;  /*主页面最大显示宽度*/
+    --header-height: 50px;  /*主标题栏高度*/
+    --part-header-height: 40px;  /*次标题栏高度*/
+    --base-icon-size: 25px;  /*常规图标显示大小*/
+    --main-font-size: .16rem;  /*正文字本大小*/
+    --info-font-size: .14rem;  /*提示信息的文本大小*/
+    --path-bar-height: 40px;  /*导航栏高度*/
+    --control-bar-height: 30px;  /*操作栏高度*/
+    --control-btn-width: 80px;  /*基础操作按钮宽度*/
+    --base-radius: 5px;  /*基础圆角半径*/
+    --base-border: 3px solid #1C5765;  /*基础弹窗边框*/
+    --base-border-color: #1C5765; /*基础边框颜色*/
+    --control-border-width: 2px;  /*按键边框宽度*/
+    --control-border: 2px solid #1C5765;  /*按键边框*/
+    --control-focus-border: 2px solid #FF9999;  /*聚焦时按键边框*/
+    --base-gap: 20px;  /*基础元素间距*/
+    --app-icon-size: 60px;  /*可操作APP图标大小*/
+    --hover-color: #F5FFFA;  /*按键悬停颜色*/
+    --hover-transition: #F5FFFA 0.3s ease;  /*悬停过渡*/
+    --input-item-height: 32px; /*表单单行高度*/
+    --input-gap: 10px;
+    --input-label-width: 70px;
+    --list-gap: 3px;
+
+    --music-panel-height: 80px; /*音乐播放器高度*/
+    --cover-background: #336699;  /*封面背景颜色*/
+    --time-text-width: 40px; /*时长宽度*/
+    --music-control-size: 30px;
+    --music-collect-size: 80px;
+    --music-control-gap: 5px;
+}
+
+@media (min-device-width: 601px){
+    :root{
+        --base-padding: 20px; /*基础文本与控件边缘间距*/
+        --extra-padding: 20px;
+        --extra-margin: 20px;
+        --input-inline-padding: 20px;  /*输入框间距*/
+        --extra-span: 10px;
+    }
+}
+
+@media (max-device-width: 600px){
+    :root {
+        --base-padding: 10px;
+        --extra-padding: 5px;
+        --extra-margin: 0px;
+        --input-inline-padding: 10px;  /*输入框间距*/
+        --extra-span: 0px;
+    }
+}
+/*--------------默认类--------------*/
+
 /*基础设置*/
 body, html {
     margin: 0;
     padding: 0;
-    font-size: 100px;
-    background: #E0ECFE;
+    font-size: var(--base-font-size);
+}
+a[href]:focus-visible {
+    outline: var(--outline-focus-visible);
 }
 /*Body基础样式*/
 .bodyContainer{
     display: flex;
     justify-content: center;
-    background: #E0ECFE;
+    background: var(--page-background);
 }
 .bodyContent{
     flex-grow: 1;
-    max-width: 740px;
-    margin: 10px;
+    max-width: var(--max-page-width);
+    margin: var(--base-margin);
     box-sizing: border-box;
 }
 /*内容栏样式*/
@@ -28,25 +90,25 @@ body, html {
 .header{
     display: flex;
     align-items: center;
-    height: 50px;
+    height: var(--header-height);
+    gap: var(--input-gap);
 }
 .headerIcon{
-    width: 25px;
-    height: 25px;
-    margin-right: 8px;
+    width: var(--base-icon-size);
+    height: var(--base-icon-size);
 }
 .headerText{
     font-weight: bold;
-    font-size: .18rem;
+    font-size: var(--main-font-size);
 }
 /*导航栏*/
 .pathBar{
     display: flex;
     align-items: center;
-    height: 40px;
+    height: var(--path-bar-height);
 }
 .pathBarText{
-    font-size: .16rem;
+    font-size: var(--main-font-size);
     text-decoration: none;
 }
 .pathBarText:visited{
@@ -57,8 +119,8 @@ body, html {
     display: flex;
     flex-grow: 1;
     background: #EFF4FF;
-    border-radius: 5px;
-    padding: 20px;
+    border-radius: var(--base-radius);
+    padding: var(--base-padding);
 }
 /*应用程序容器*/
 .appContainer{
@@ -71,23 +133,23 @@ body, html {
     vertical-align: top;
     flex-direction: column;
     align-items: center;
-    width: 80px;
-    height: 80px;
-    background: #FFFFFF;
-    border-radius: 5px;
+    width: calc(var(--app-icon-size) + 20px);
+    height: calc(var(--app-icon-size) + 20px);
+    background: var(--control-background);
+    border-radius: var(--base-radius);
     padding: 5px;
     margin: 5px;
 }
 .appItem:hover{
-    background: #F5FFFA;
-    transition: background-color 0.3s ease;
+    background: var(--hover-color);
+    transition: var(--hover-transition);
 }
 .appItem>img{
-    width: 60px;
-    height: 60px;
+    width: var(--app-icon-size);
+    height: var(--app-icon-size);
 }
 .appItem>a{
-    font-size: .16rem;
+    font-size: var(--main-font-size);
     overflow: hidden;
     text-decoration: none;
     color: blue;
@@ -110,128 +172,125 @@ body, html {
 .messageContent{
     align-items: center;
     display: grid;
-    padding-left: 20px;
-    font-size: .14rem;
+    padding-left: var(--base-padding);
+    font-size: var(--info-font-size);
 }
 
 .controlBar{
-    height: 30px;
-    font-size: 0.14rem;
+    height: var(--control-bar-height);
+    font-size: var(--info-font-size);
     display: flex;
     justify-content: center;
 }
 .controlButton{
-    background: #FFFFFF;
+    background: var(--control-background);
     height: 100%;
-    width: 80px;
-    border: 2px solid #1C5765;
+    width: var(--control-btn-width);
+    border: var(--control-border);
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
-    font-size: 0.14rem;
+    border-radius: var(--base-radius);
+    font-size: var(--info-font-size);
 }
 .controlButton>a{
-    font-size: .14rem;
+    font-size: var(--info-font-size);
     color: black;
 }
 .controlButton:hover{
-    background: #F5FFFA;
-    transition: background-color 0.3s ease;
+    background: var(--hover-color);
+    transition: var(--hover-transition);
+}
+.controlButton:focus-visible{
+    border: var(--control-focus-border);
+    outline: var(--outline-focus-visible);
 }
 
 /*搜索栏*/
 .searchBar{
-    height: 30px;
-    font-size: 0.14rem;
+    height: var(--control-bar-height);
+    font-size: var(--info-font-size);
     display: grid;
-    grid-template-columns: 1fr 80px;
+    grid-template-columns: 1fr var(--control-btn-width);
     align-items: center;
     box-sizing: border-box;
 }
 .searchButton{
-    background: #FFFFFF;
+    background: var(--control-background);
     height: 100%;
-    width: 80px;
-    border: 2px solid #1C5765;
+    width: var(--control-btn-width);
+    border: var(--control-border);
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-radius: 0 var(--base-radius) var(--base-radius) 0;
 }
 
 /*默认模态弹窗标题栏*/
 .popupHeader{
     display: flex;
     align-items: center;
-    height: 40px;
+    height: var(--part-header-height);
 }
 
 /*富文本输入项容器*/
 .nbInputContainer{
-    display: flex;
+    display: grid;
     flex-direction: column;
-    padding: 5px 0;
     box-sizing: border-box;
-    flex-grow: 1;
-    overflow-y: auto;
+    height: 100%;
 }
 /*富文本输入栏*/
 .nbInputLabel{
-    height: 40px;
-    font-size: .16rem;
+    height: var(--input-item-height);
+    font-size: var(--main-font-size);
     display: flex;
     align-items: center;
 }
 .nbTinyMceField{
-    flex-grow: 1;
 }
 .nbTinyMceField>div:last-child{
-    border-color: #1C5765;
+    height: 100%;
+    border-color: var(--base-border-color);
 }
 
 /*书签输入项容器*/
 .bmInputContainer{
-    height: 40px;
+    height: var(--input-item-height);
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 5px 0;
     box-sizing: border-box;
     overflow: hidden;
 }
 /*书签输入项占位*/
 .bmInputSpan{
-    height: 10px;
+    height: var(--extra-span);
 }
 /*书签输入项标签*/
 .bmInputLabel{
-    font-size: 0.16rem;
-    width: 70px;
+    font-size: var(--main-font-size);
+    width: var(--input-label-width);
 }
 /*书签输入项-文本输入类型*/
 .bmInputTextField{
     display: grid;
-    grid-template-columns: 70px 1fr;
-    height: 100%;
+    grid-template-columns: var(--input-label-width) 1fr;
+    height: var(--input-item-height);
     flex-grow: 1;
     align-items: center;
-    font-size: 0.16rem;
+    font-size: var(--main-font-size);
 }
 .bmInputTextField>input{
     box-sizing: border-box;
     height: 100%;
     width: 100%;
-    padding: 5px 0;
-    padding-inline: 20px;
-    background: #FFFFFF;
-    border-style: solid;
-    border-color: #1C5765;
-    border-width: 2px;
-    border-radius: 5px;
+    padding-inline: var(--input-inline-padding);
+    background: var(--control-background);
+    border: var(--control-border);
+    border-radius: var(--base-radius);
 }
 .bmInputTextField>input:focus-visible{
     outline: none;
@@ -241,11 +300,11 @@ body, html {
 /*书签输入项-文件输入类型*/
 .bmInputFileField{
     display: grid;
-    grid-template-columns: 70px 85px 1fr;
+    grid-template-columns: var(--input-label-width) calc(var(--control-btn-width) + 5px) 1fr;
     height: 100%;
     flex-grow: 1;
     align-items: center;
-    font-size: 0.16rem;
+    font-size: var(--main-font-size);
 }
 .bmInputFileField>input{
     box-sizing: border-box;
@@ -253,50 +312,40 @@ body, html {
     width: 100%;
     margin-right: 5px;
     padding: 5px 0;
-    padding-inline: 20px;
-    background: #FFFFFF;
-    border-style: solid;
-    border-color: #1C5765;
-    border-width: 2px;
-    border-radius: 5px;
+    padding-inline: var(--input-inline-padding);
+    background: var(--control-background);
+    border: var(--control-border);
+    border-radius: var(--base-radius);
 }
 
 /*书签输入项-文本输入类型*/
 .bmInputSelectField{
     display: grid;
-    grid-template-columns: 70px 1fr;
+    grid-template-columns: var(--input-label-width) 1fr;
     height: 100%;
     flex-grow: 1;
     align-items: center;
-    font-size: 0.16rem;
+    font-size: var(--main-font-size);
 }
 
-/*书签列表*/
-.bmList{
-    background: #FFFFFF;
-    flex-grow: 1;
-    margin: 0;
-    padding: 20px 10px 0 10px;
-    border-radius: 10px;
-}
 /*书签的行*/
 .bmItem{
-    margin: 5px 10px;
     padding: 1px 0;
+    margin: 0;
     display: grid;
-    grid-template-columns: 25px 1fr 25px;
-    gap: 5px;
+    grid-template-columns: var(--base-icon-size) 1fr var(--base-icon-size);
+    gap: var(--input-gap);
     align-items: center; /* 垂直居中对齐子元素（如果需要的话） */
     color: blue;
-    font-size: 16px;
+    font-size: var(--main-font-size);
 }
 .bmItem:hover{
-    background-color: #F0F1F9;
-    transition: background-color 0.3s ease; /* 可选：添加过渡效果 */
+    background-color: var(--hover-color);
+    transition: var(--hover-transition);
 }
 .bmItem>a{
     width: 100%;
-    overflow-x: scroll;
+    overflow-x: auto;
     white-space: nowrap;
 }
 .bmItem>a:visited{
@@ -304,12 +353,15 @@ body, html {
 }
 /*书签图标样式*/
 .bmIcon{
-    width: 25px;
-    height: 25px;
+    width: var(--base-icon-size);
+    height: var(--base-icon-size);
 }
 .bmIcon:hover{
-    background-color: #F0F1F9;
-    transition: background-color 0.3s ease; /* 可选：添加过渡效果 */
+    background-color: var(--hover-color);
+    transition: var(hover-transition); /* 可选：添加过渡效果 */
+}
+.bmIcon:focus-visible{
+    outline: var(--outline-focus-visible);
 }
 
 /*右侧显示的弹窗样式*/
@@ -317,9 +369,9 @@ body, html {
     display: block; /* 默认隐藏弹窗 */
     position: fixed;
     transform: translate(0, -50%);
-    border: 3px solid #1C5765;
-    border-radius: 5px;
-    background-color: #FFFFFF;
+    border: var(--base-border);
+    border-radius: var(--base-radius);
+    background-color: var(--control-background);
 }
 
 /*操作弹窗样式*/
@@ -327,27 +379,31 @@ body, html {
     display: block; /* 默认隐藏弹窗 */
     position: fixed;
     transform: translate(-100%, -50%);
-    border: 3px solid #1C5765;
-    border-radius: 5px;
-    background-color: #FFFFFF;
+    border: var(--base-border);
+    border-radius: var(--base-radius);
+    background-color: var(--control-background);
 }
 .controlBtnList{
     display: grid;
-    gap: 10px;
-    margin: 10px 0;
-    font-size: 0.16rem;
+    gap: var(--input-gap);
+    margin: var(--base-margin) 0;
+    font-size: var(--main-font-size);
 }
 .controlBtnList>dd{
-    margin: 0 5px;
-    width: 80px;
+    margin: 0;
+    width: var(--control-btn-width);
     text-align: center;
 }
 .controlBtnList>dd:hover{
-    background: #F5FFFA;
-    transition: background-color 0.3s ease;
+    background: var(--hover-color);
+    transition: var(--hover-transition);
 }
 .controlBtnList>dd>a{
     cursor: pointer;
+}
+.controlBtnList>dd>a:focus-visible{
+    cursor: pointer;
+    outline: var(--outline-focus-visible);
 }
 
 /*确认删除弹窗*/
@@ -358,15 +414,17 @@ body, html {
     display: flex;
     width: 100%;
     justify-content: center;
-    gap: 20px;
+    gap: var(--base-gap);
 }
 
 /*音乐播放器容器*/
 .musicPlayContainer{
-    background: #FFFFFF;
-    border-radius: 5px;
+    background: var(--control-background);
+    border-radius: var(--base-radius);
     display: grid;
-    grid-template-columns: 1fr 5fr;
+    grid-template-columns: var(--music-panel-height) 1fr;
+    height: var(--music-panel-height);
+    box-sizing: border-box;
 }
 /*音乐封面容器*/
 .coverContainer{
@@ -374,16 +432,13 @@ body, html {
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    padding: 5px;
-    min-width: 60px;
-    max-width: 80px;
     margin: auto;
 }
 .coverContainer>img{
-    height: width;
-    width: 100%;
-    border-radius: 5px;
-    background: #336699;
+    height: 80%;
+    width: 80%;
+    border-radius: var(--base-radius);
+    background: var(--cover-background);
 }
 /*音乐控制容器*/
 .mpCtrlContainer{
@@ -394,18 +449,18 @@ body, html {
 /*音乐进度栏*/
 .musicScrollBar{
     display: grid;
-    grid-template-columns: 40px 1fr 40px;
+    grid-template-columns: var(--time-text-width) 1fr var(--time-text-width);
     align-items: center;
-    font-size: 0.14rem;
+    font-size: var(--info-font-size);
     box-sizing: border-box;
-    padding: 10px;
-    gap: 10px;
+    padding-right: var(--input-gap);
+    gap: var(--input-gap);
 }
 .musicScrollBar>div{
     display: flex;
     justify-content: center;
     align-center: center;
-    width: 40px;
+    width: var(--time-text-width);
 }
 .musicProcess{
     flex-grow: 1;
@@ -415,22 +470,19 @@ body, html {
 .musicCtrlPanel{
     display: grid;
     grid-template-columns: 3fr 1fr 1fr 1fr 3fr;
-    height: 50px;
+    height: calc(var(--music-panel-height) / 2);
     align-items: center;
-    box-sizing: border-box;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    gap: 10px;
+    padding-right: var(--input-gap);
+    gap: var(--input-gap);
 }
 .musicCtrlPanel>img{
-    width: 30px;
-    height: 30px;
-    border-radius: 5px;
+    width: var(--base-icon-size);
+    height: var(--base-icon-size);
+    border-radius: var(--base-radius);
     box-sizing: border-box;
 }
 .musicCtrlPanel>img:hover{
-    border: 2px solid #336699;
+    border: var(--control-border);
 }
 .musicCtrlPanel>img:nth-child(2), .musicCtrlPanel>img:nth-child(3), .musicCtrlPanel>img:nth-child(4){
     margin: auto;
@@ -441,23 +493,21 @@ body, html {
 
 /*音乐播放器导航路径*/
 .musicPathBar{
-    margin: 5px 10px;
-    padding: 1px 0;
+    margin: 0;
     display: grid;
-    grid-template-columns: 25px 1fr;
-    gap: 5px;
-    font-size: 0.16rem;
+    grid-template-columns: var(--base-icon-size) 1fr;
+    gap: var(--input-gap);
+    font-size: var(--main-font-size);
     align-items: center; /* 垂直居中对齐子元素（如果需要的话） */
 }
 .musicPathBar>div{
     display: grid;
-    grid-template-columns: 70px 1fr;
+    grid-template-columns: var(--music-collect-size) 1fr;
     color: black;
-    gap: 5px;
     width: 100%;
     align-items: center; /* 垂直居中对齐子元素（如果需要的话） */
 }
-.musicPathBar>div>a:last-child{
+.musicPathBar>div>a{
     width: 100%;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -469,57 +519,65 @@ body, html {
 
 /*音乐合集操作栏*/
 .musicCtrlBar{
-    margin: 5px 10px;
-    padding: 1px 0;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #336699;
+    margin: 0;
+    margin-bottom: var(--input-gap);
+    padding-bottom: var(--input-gap);
+    border: var(--control-border);
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
     display: grid;
-    grid-template-columns: 1fr 80px 30px;
-    gap: 5px;
-    font-size: 0.16rem;
+    grid-template-columns: 1fr var(--control-btn-width) var(--control-bar-height);
+    gap: var(--music-control-gap);
+    font-size: var(--main-font-size);
     align-items: center; /* 垂直居中对齐子元素（如果需要的话） */
     overflow: hidden;
-    height: 30px;
+    height: var(--control-bar-height);
 }
 
 /*音乐合集操作栏*/
 .musicCtrlIcon{
-    width: 30px;
-    height: 30px;
-    border-radius: 5px;
-    border: 2px solid #1C5765;
+    width: var(--control-bar-height);
+    height: var(--control-bar-height);
+    border-radius: var(--base-radius);
+    border: var(--control-border);
     box-sizing: border-box;
 }
 
+/*书签列表*/
+.bmList{
+    background: var(--control-background);
+    flex-grow: 1;
+    margin: 0;
+    padding: var(--base-padding);
+    border-radius: var(--base-radius);
+    gap: var(--list-gap);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/*操作栏*/
+.controlPanel{
+    height: calc(var(control-bar-height) + var(--input-gap));
+    margin-bottom: var(--input-gap);
+    gap: var(--input-gap);
+    display: grid;
+    grid-template-columns: 3fr var(--extra-padding) 1fr;
+    align-items: center;
+    font-size: 0;
+}
+
+/*音乐内容栏*/
+.mpContent{
+    display: grid;
+    grid-template-rows: var(--music-panel-height) 1fr;
+    gap: var(--base-gap);
+    flex-grow: 1;
+    padding: var(--input-gap) 0;
+}
+
 @media (max-device-width: 600px){
-    .paddingExtra{
-        padding-left: 5px;
-    }
-    .marginExtra{
-        margin-left: 0;
-    }
-    .rightExtra{
-        margin-right: 0;
-    }
-    /*操作栏*/
-    .controlPanel{
-        min-height: 40px;
-        margin-bottom: 10px;
-        gap: 5px;
-        display: grid;
-        grid-template-columns: 3fr 0 1fr;
-        align-items: center;
-        font-size: 0;
-    }
-    /*音乐内容栏*/
-    .mpContent{
-        display: grid;
-        grid-template-rows: 100px 1fr;
-        gap: 20px;
-        flex-grow: 1;
-        padding: 10px 0;
-    }
     /*弹窗消息容器*/
     .messagePopup
     {
@@ -529,10 +587,10 @@ body, html {
         left: 50%;
         width: calc(100% - 60px);
         transform: translate(-50%, -50%);
-        border: 3px solid #1C5765;
-        border-radius: 5px;
-        padding: 10px;
-        background-color: #FFFFFF;
+        border: var(--base-border);
+        border-radius: var(--base-radius);
+        padding: var(--base-padding);
+        background-color: var(--control-background);
         z-index: 1;
     }
     /*默认模态弹窗内容*/
@@ -542,60 +600,63 @@ body, html {
         left: 50%;
         width: calc(100% - 60px);
         transform: translate(-50%, -50%);
-        border: 3px solid #1C5765;
-        border-radius: 5px;
-        background-color: #FFFFFF;
-        font-size: .16rem;
-        padding: 0 20px 20px 20px;
+        border: var(--base-border);
+        border-radius: var(--base-radius);
+        background-color: var(--control-background);
+        font-size: var(--main-font-size);
+        padding: var(--base-padding);
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
+        gap: var(--input-gap);
     }
     /*笔记模态弹窗内容*/
     .nbPopupContent{
         position: fixed;
         top: 50%;
         left: 50%;
-        width: calc(100% - 60px);
+        width: calc(100% - 2 * var(--base-padding));
         transform: translate(-50%, -50%);
-        border: 3px solid #1C5765;
-        border-radius: 5px;
-        background-color: #FFFFFF;
-        font-size: .16rem;
-        padding: 20px;
+        border: var(--base-border);
+        border-radius: var(--base-radius);
+        background-color: var(--control-background);
+        font-size: var(--main-font-size);
+        padding: var(--base-padding);
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
+        gap: var(--input-gap);
+        overflow-y: auto;
     }
     /*笔记模态弹窗内容-纯显示*/
     .nbPopupDisplay{
         position: fixed;
         top: 50%;
         left: 50%;
-        width: calc(100% - 60px);
-        height: 90%;
+        width: calc(100% - 20px);
         transform: translate(-50%, -50%);
-        border: 3px solid #1C5765;
-        border-radius: 5px;
-        background-color: #FFFFFF;
-        font-size: .16rem;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
+        border: var(--base-border);
+        border-radius: var(--base-radius);
+        background-color: var(--control-background);
+        font-size: var(--main-font-size);
+        padding: var(--base-padding);
+        display: grid;
+        gap: var(--input-gap);
+        height: 90%;
+        grid-template-rows: var(--input-item-height) 1fr;
         box-sizing: border-box;
+        overflow-y: auto;
     }
     /*搜索栏输入*/
     .searchInput{
-        background: #FFFFFF;
+        background: var(--control-background);
         height: 100%;
         width: 100%;
-        padding-inline: 20px;
+        padding-inline: var(--input-inline-padding);
         box-sizing: border-box;
-        border-style: solid;
-        border-color: #1C5765;
-        border-width: 2px 0 2px 2px;
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
+        border: var(--control-border);
+        border-radius: var(--base-radius) 0 0 var(--base-radius);
+        border-right: 0;
         outline: none;
         box-shadow: none;
     }
@@ -603,13 +664,10 @@ body, html {
     .bmInputSelect{
         box-sizing: border-box;
         height: 100%;
-        padding: 5px 0;
-        background: #FFFFFF;
-        border-style: solid;
-        border-color: #1C5765;
-        border-width: 2px;
-        border-radius: 5px;
-        padding-left: 15px;
+        background: var(--control-background);
+        border: var(--control-border);
+        border-radius: var(--base-radius);
+        padding-left: calc(var(--input-inline-padding) - 5px);
     }
     /*确认删除弹窗*/
     .cfmDelContent{
@@ -618,16 +676,15 @@ body, html {
         left: 50%;
         width: calc(100% - 60px);
         transform: translate(-50%, -50%);
-        border: 3px solid #1C5765;
-        padding: 10px;
-        border-radius: 5px;
-        background-color: rgba(255,255,255,1);
+        border: var(--base-border);
+        padding: var(--base-padding);
+        border-radius: var(--base-radius);
+        background-color: var(--control-background);
         display: grid;
         grid-template-rows: 1fr 1fr;
-        gap: 5px;
         align-items: center;
         box-sizing: border-box;
-        font-size: 0.16rem;
+        font-size: var(--main-font-size);
     }
 }
 
@@ -636,45 +693,18 @@ body, html {
     display: block; /* 默认隐藏弹窗 */
     position: fixed;
     transform: translate(-100%, -50%);
-    border: 3px solid #1C5765;
-    border-radius: 5px;
-    background-color: #FFFFFF;
-    height: 40px;
+    border: var(--base-border);
+    border-radius: var(--base-radius);
+    background-color: var(--control-background);
+    height: var(--control-bar-height)
     margin: auto;
 }
 .volumeCtrlContent>div{
-    height: 40px;
+    height: var(--control-bar-height);
     display: grid;
 }
 
 @media (min-device-width: 601px){
-    /*操作栏*/
-    .controlPanel{
-        min-height: 40px;
-        margin-bottom: 10px;
-        gap: 10px;
-        display: grid;
-        grid-template-columns: 3fr 1fr 1fr;
-        align-items: center;
-        font-size: 0;
-    }
-    .paddingExtra{
-        padding-left: 20px;
-    }
-    .marginExtra{
-        margin-left: 20px;
-    }
-    .rightExtra{
-        margin-right: 20px;
-    }
-    /*音乐内容栏*/
-    .mpContent{
-        display: grid;
-        grid-template-rows: 100px 1fr;
-        gap: 20px;
-        flex-grow: 1;
-        padding: 10px 20px;
-    }
     /*弹窗消息容器*/
     .messagePopup
     {
@@ -684,10 +714,10 @@ body, html {
         left: 50%;
         width: 500px;
         transform: translate(-50%, -50%);
-        border: 3px solid #1C5765;
-        border-radius: 5px;
-        padding: 10px;
-        background-color: #FFFFFF;
+        border: var(--base-border);
+        border-radius: var(--base-radius);
+        padding: var(--base-padding);
+        background-color: var(--control-background);
         z-index: 1;
         box-sizing: border-box;
     }
@@ -698,14 +728,15 @@ body, html {
         left: 50%;
         width: 500px;
         transform: translate(-50%, -50%);
-        border: 3px solid #1C5765;
-        border-radius: 5px;
-        background-color: #FFFFFF;
-        font-size: .16rem;
-        padding: 20px;
+        border: var(--base-border);
+        border-radius: var(--base-radius);
+        background-color: var(--control-background);
+        font-size: var(--main-font-size);
+        padding: var(--base-padding);
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
+        gap: var(--input-gap);
     }
     /*笔记模态弹窗内容*/
     .nbPopupContent{
@@ -715,14 +746,16 @@ body, html {
         width: 50%;
         min-width: 500px;
         transform: translate(-50%, -50%);
-        border: 3px solid #1C5765;
-        border-radius: 5px;
-        background-color: #FFFFFF;
-        font-size: .16rem;
-        padding: 20px;
+        border: var(--base-border);
+        border-radius: var(--base-radius);
+        background-color: var(--control-background);
+        font-size: var(--main-font-size);
+        padding: var(--base-padding);
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
+        gap: var(--input-gap);
+        overflow-y: auto;
     }
     /*笔记模态弹窗内容-纯显示*/
     .nbPopupDisplay{
@@ -730,30 +763,29 @@ body, html {
         top: 50%;
         left: 50%;
         width: 50%;
-        height: 90%;
         min-width: 500px;
+        min-height: 90%;
         transform: translate(-50%, -50%);
-        border: 3px solid #1C5765;
-        border-radius: 5px;
-        background-color: #FFFFFF;
-        font-size: .16rem;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
+        border: var(--base-border);
+        border-radius: var(--base-radius);
+        background-color: var(--control-background);
+        font-size: var(--main-font-size);
+        padding: var(--base-padding);
+        display: grid;
+        grid-template-rows: var(--input-item-height) 1fr;
         box-sizing: border-box;
+        overflow-y: auto;
     }
 
     /*搜索栏输入*/
     .searchInput{
-        background: #FFFFFF;
+        background: var(--control-background);
         height: 100%;
-        padding-inline: 20px;
+        padding-inline: var(--input-inline-padding);
         box-sizing: border-box;
-        border-style: solid;
-        border-color: #1C5765;
-        border-width: 2px 0 2px 2px;
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
+        border: var(--control-border);
+        border-right: 0;
+        border-radius: var(--base-radius) 0 0 var(--base-radius);
         outline: none;
         box-shadow: none;
     }
@@ -761,13 +793,10 @@ body, html {
     .bmInputSelect{
         box-sizing: border-box;
         height: 100%;
-        padding: 5px 0;
-        background: #FFFFFF;
-        border-style: solid;
-        border-color: #1C5765;
-        border-width: 2px;
-        border-radius: 5px;
-        padding-left: 15px;
+        background: var(--control-background);
+        border: var(--control-border);
+        border-radius: var(--base-radius);
+        padding-left: calc(var(--input-inline-padding) - 5px);
     }
     /*确认删除弹窗*/
     .cfmDelContent{
@@ -776,19 +805,36 @@ body, html {
         left: 50%;
         width: 300px;
         transform: translate(-50%, -50%);
-        border: 3px solid #1C5765;
-        padding: 10px;
-        border-radius: 5px;
-        background-color: rgba(255,255,255,1);
+        border: var(--base-border);
+        padding: var(--base-padding);
+        border-radius: var(--base-radius);
+        background-color: var(--control-background);
         display: grid;
         grid-template-rows: 1fr 1fr;
-        gap: 5px;
         align-items: center;
         box-sizing: border-box;
-        font-size: 0.16rem;
+        font-size: var(--main-font-size);
     }
 }
 
+#musicMoreCtrlBtn{
+    transform: rotate(90deg);
+}
+
+/*------------用于补充其它的样式-------------------*/
+.rightExtra{
+    margin-right: var(--extra-margin);
+}
+.marginExtra{
+    margin-left: var(--extra-margin);
+}
+.paddingExtra{
+    padding-left: var(--extra-padding);
+}
+/*右侧间隔*/
+.rightMargin{
+    margin-right: 8px;
+}
 /*隐藏元素*/
 .hidden{
     display: none; /* 默认隐藏弹窗 */
@@ -799,13 +845,9 @@ body, html {
 }
 /*默认间距*/
 .gapDefault{
-    gap: 20px;
+    gap: var(--base-gap);
 }
 /*模态弹窗开启时禁用页面滚动*/
 .modalOpen{
     overflow: hidden;
-}
-
-#musicMoreCtrlBtn{
-    transform: rotate(90deg);
 }
