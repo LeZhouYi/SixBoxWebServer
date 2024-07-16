@@ -37,11 +37,13 @@ function bindControlBtnClick(element, nbId) {
     element.addEventListener('click', function (event) {
         nowControlId = nbId;
         BaseUtils.displayElement('nbControlPopup');
+        document.getElementById('editNbBtn').focus();
 
         /*调整元素位置*/
         let element = document.getElementById('nbControlContent');
-        element.style.left = event.clientX + 'px';
-        element.style.top = event.clientY + 'px';
+        let rect = event.target.getBoundingClientRect();
+        element.style.left = rect.left + 'px';
+        element.style.top = rect.top + 'px';
     });
 }
 
@@ -62,7 +64,7 @@ function displayNoteBook(){
                 mceEditor.setContent(data.content);
             }
             BaseUtils.displayModal('readNbPopup');  //显示编辑弹窗
-            document.getElementById('displayNbName').focus();
+            tinymce.get('displayNbTinyMce').focus();
         }
     });
 }
@@ -93,6 +95,7 @@ function addNbListItem(data, parent) {
     controlIcon.src = "static/images/icons/more_vertical.png";
     controlIcon.alt = "操作";
     controlIcon.classList.add('bmIcon', 'clickable');
+    BaseUtils.setElementFocusClick(controlIcon);
     bindControlBtnClick(controlIcon, data.id);  // 绑定点击事件
 
     let lineItem = document.createElement('dd');
@@ -236,6 +239,7 @@ document.getElementById('addCancelBtn').addEventListener('click', function () {
 document.getElementById('addNbButton').addEventListener('click', function () {
     /*点击新增笔记按钮*/
     BaseUtils.displayModal('addNbPopup');
+    document.getElementById('addNbName').focus();
     createNbFolderOption('addNbFolderSelect');
 });
 
@@ -286,6 +290,7 @@ document.getElementById('deleteNbBtn').addEventListener('click', function () {
     /*点击删除笔记按钮*/
     BaseUtils.hideElement('nbControlPopup');
     BaseUtils.displayModal('cfmDelPopup');
+    document.getElementById('confirmDelBtn').focus();
 });
 
 document.getElementById('cancelDelBtn').addEventListener('click', function () {
@@ -350,6 +355,7 @@ document.getElementById('editNbBtn').addEventListener('click', function () {
                 mceEditor.setContent(data.content);
             }
             BaseUtils.displayModal('editNbPopup');  //显示编辑弹窗
+            document.getElementById('editNbName').focus();
         }
     });
 });
@@ -420,7 +426,9 @@ document.addEventListener('keydown', function(event){
 
 window.onload = function(){
     BaseUtils.resizeFullScreen('bodyContainer');
-    BaseUtils.setFocusClick('searchNbButton', 'addNbButton');
+    BaseUtils.setFocusClick('searchNbButton', 'addNbButton', 'addConfirmBtn', 'addCancelBtn');
+    BaseUtils.setFocusClick('editNbBtn', 'deleteNbBtn', 'editConfirmBtn', 'editCancelBtn');
+    BaseUtils.setFocusClick('confirmDelBtn', 'cancelDelBtn');
 };
 
 window.addEventListener('resize', BaseUtils.throttle(function(){

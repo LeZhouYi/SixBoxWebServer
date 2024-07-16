@@ -66,6 +66,7 @@ body, html {
 }
 a[href]:focus-visible {
     outline: var(--outline-focus-visible);
+    outline-offset: 0;
 }
 /*Body基础样式*/
 .bodyContainer{
@@ -139,6 +140,10 @@ a[href]:focus-visible {
     border-radius: var(--base-radius);
     padding: 5px;
     margin: 5px;
+}
+.appItem:focus-visible{
+    border: var(--control-focus-border);
+    outline: var(--outline-focus-visible);
 }
 .appItem:hover{
     background: var(--hover-color);
@@ -226,6 +231,10 @@ a[href]:focus-visible {
     align-items: center;
     justify-content: center;
     border-radius: 0 var(--base-radius) var(--base-radius) 0;
+}
+.searchButton:focus-visible{
+    border: var(--control-focus-border);
+    outline: var(--outline-focus-visible);
 }
 
 /*默认模态弹窗标题栏*/
@@ -342,6 +351,10 @@ a[href]:focus-visible {
 .bmItem:hover{
     background-color: var(--hover-color);
     transition: var(--hover-transition);
+}
+.bmItem>a:focus-visible{
+    border: var(--control-focus-border);
+    outline: var(--outline-focus-visible);
 }
 .bmItem>a{
     width: 100%;
@@ -850,4 +863,9 @@ a[href]:focus-visible {
 /*模态弹窗开启时禁用页面滚动*/
 .modalOpen{
     overflow: hidden;
+}
+/*聚焦时样式*/
+.focusBorder:focus-visible{
+    border: var(--control-focus-border);
+    outline: var(--outline-focus-visible);
 }
