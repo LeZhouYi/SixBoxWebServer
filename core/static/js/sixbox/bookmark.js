@@ -17,8 +17,11 @@ function bindControlBtnClick(element, bmId){
 
         /*调整元素位置*/
         let element = document.getElementById('bmControlContent');
-        element.style.left = event.clientX + 'px';
-        element.style.top = event.clientY + 'px';
+        let rect = event.target.getBoundingClientRect();
+        element.style.left = rect.left + 'px';
+        element.style.top = rect.top + 'px';
+
+        document.getElementById('editBmBtn').focus();
     });
 }
 
@@ -44,6 +47,7 @@ function addBmListItem(data,parent){
     controlIcon.src = "static/images/icons/more_vertical.png";
     controlIcon.alt = "操作";
     controlIcon.classList.add('bmIcon', 'clickable');
+    BaseUtils.setElementFocusClick(controlIcon);
     bindControlBtnClick(controlIcon, data.id);  // 绑定点击事件
 
     let lineItem = document.createElement('dd');
@@ -106,10 +110,10 @@ function clearAddPopupInput(){
 function controlSelectTypeOption(selectValue, changeElement){
     /*根据值不同，控制url控件是否显示*/
     if (selectValue == bmTypeEnum.BOOKMARK){
-        changeElement.classList.remove(BaseUtils.getHiddenClass());
+        changeElement.classList.remove(BaseUtils.hiddenClass);
     }
     else if (selectValue == bmTypeEnum.FOLDER){
-        changeElement.classList.add(BaseUtils.getHiddenClass());
+        changeElement.classList.add(BaseUtils.hiddenClass);
     }
 }
 
@@ -133,22 +137,10 @@ function createBmFolderOption(selectId){
     });
 }
 
-window.onload = function(){
-    BaseUtils.resizeFullScreen();
-};
-
-window.addEventListener('resize', BaseUtils.throttle(function(){
-    BaseUtils.resizeFullScreen();
-}), 200);
-
 document.getElementById('addBmButton').addEventListener('click', function(){
     BaseUtils.displayModal('addBmPopup'); //显示弹窗
+    document.getElementById('addBmName').focus();
     createBmFolderOption('addBmFolderSelect'); //构造选项
-});
-
-document.addEventListener('click', function(event){
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'addBmPopup', 'addBmContent');
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -161,10 +153,10 @@ document.getElementById('addBmTypeSelect').addEventListener('change', function()
     var selectValue = this.value;
     var changeElement = document.getElementById('addBmUrl').parentElement.parentElement;
     if (selectValue == bmTypeEnum.BOOKMARK){
-        changeElement.classList.remove(BaseUtils.getHiddenClass());
+        BaseUtils.displayElement(changeElement);
     }
     else if (selectValue == bmTypeEnum.FOLDER){
-        changeElement.classList.add(BaseUtils.getHiddenClass());
+        BaseUtils.hideElement(changeElement);
     }
 });
 
@@ -204,20 +196,11 @@ document.getElementById('addBmCfmBtn').addEventListener('click', function(){
     });
 });
 
-document.addEventListener('click', function(event){
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'bmControlPopup', 'bmControlContent');
-});
-
-document.addEventListener('click', function(event){
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'cfmDelPopup', 'cfmDelContent');
-});
-
 document.getElementById('deleteBmBtn').addEventListener('click', function(){
     /*点击删除书签按钮*/
     BaseUtils.hideElement('bmControlPopup');
     BaseUtils.displayModal('cfmDelPopup');
+    document.getElementById('confirmDelBtn').focus();
 });
 
 document.getElementById('cancelDelBtn').addEventListener('click', function(){
@@ -243,11 +226,6 @@ document.getElementById('confirmDelBtn').addEventListener('click', function(){
             updateBmList();  //更新当前书签列表
         }
     });
-});
-
-document.addEventListener('click', function(event){
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'editBmPopup', 'editBmContent');
 });
 
 document.getElementById('editCancelBtn').addEventListener('click', function(){
@@ -280,6 +258,7 @@ document.getElementById('editBmBtn').addEventListener('click', function(){
             BaseUtils.setSelectedByValue('editBmFolderSelect', data.parentId); // 设置当前文件夹
             document.getElementById('editBmFolderSelect').disabled = true;
             BaseUtils.displayModal('editBmPopup');  //显示编辑弹窗
+            document.getElementById('editBmName').focus();
         }
     });
 });
@@ -341,4 +320,28 @@ document.getElementById('searchBmInput').addEventListener('keydown', function(){
     if (event.keyCode == 13 || event.key == 'Enter'){
         document.getElementById('searchBmButton').click();
     }
+});
+
+window.onload = function(){
+    BaseUtils.resizeFullScreen('bodyContainer');
+    BaseUtils.setFocusClick('searchBmButton', 'addBmButton', 'addBmCfmBtn', 'addBmCclBtn');
+    BaseUtils.setFocusClick('editBmBtn', 'deleteBmBtn', 'editConfirmBtn', 'editCancelBtn');
+    BaseUtils.setFocusClick('confirmDelBtn', 'cancelDelBtn');
+};
+
+window.addEventListener('resize', BaseUtils.throttle(function(){
+    BaseUtils.resizeFullScreen('bodyContainer');
+}), 200);
+
+document.addEventListener('keydown', function(event){
+    /*监听Esc并退出弹窗*/
+    BaseUtils.escCloseModal(event, 'addBmPopup', 'bmControlPopup', 'cfmDelPopup', 'editBmPopup');
+});
+
+document.addEventListener('click', function(event){
+    /*监听文档点击事件，检查点击是否在弹窗外部*/
+    BaseUtils.checkClickModalPopup(event, 'addBmPopup', 'addBmContent');
+    BaseUtils.checkClickModalPopup(event, 'editBmPopup', 'editBmContent');
+    BaseUtils.checkClickModalPopup(event, 'cfmDelPopup', 'cfmDelContent');
+    BaseUtils.checkClickModalPopup(event, 'bmControlPopup', 'bmControlContent');
 });

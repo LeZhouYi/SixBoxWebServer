@@ -177,6 +177,7 @@ body, html {
     padding: 5px 0;
     box-sizing: border-box;
     flex-grow: 1;
+    overflow-y: auto;
 }
 /*富文本输入栏*/
 .nbInputLabel{

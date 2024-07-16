@@ -1,10 +1,5 @@
 const hiddenClass = 'hidden';  // 隐藏元素Class
 
-export function getHiddenClass(){
-    /*获取用于隐藏的类*/
-    return hiddenClass;
-}
-
 export function getUrlParams(url, paramName){
     /*提取url中的参数名对应的参数值*/
     let urlObj = new URL(url);
@@ -24,6 +19,7 @@ export function hideModal(elementId){
     let element = document.getElementById(elementId);
     element.classList.add(hiddenClass);
     document.body.classList.remove('modalOpen');
+    resetFocus()
 }
 
 export function displayElement(elementId){
@@ -45,6 +41,7 @@ export function checkClickModalPopup(event, containerId, contentId){
     // 检查点击是否在弹窗或其子元素上
     if(!content.contains(event.target) && container.contains(event.target)){
         container.classList.add(hiddenClass);  // 不是，则隐藏弹窗
+        resetFocus();
     }
 }
 
@@ -94,8 +91,7 @@ export function fetchFile(url){
         }
         if (response.headers.has('Content-Disposition')) {
             const contentDisposition = response.headers.get('Content-Disposition');
-            console.log(contentDisposition);
-            const fileNameRegex = /filename=([^;\s]+)/;
+            const fileNameRegex = /filename=([\w\d-'" ]+[.\w]+)/;
             const matches = contentDisposition.match(fileNameRegex);
             if (matches && matches.length > 1) {
                 fileName =decodeRFC5987(matches[1]); // 提取文件名
@@ -197,9 +193,9 @@ export function intToMinuteTime(seconds){
     return formattedMinutes + ":" + formattedSeconds;
 }
 
-export function resizeFullScreen(){
+export function resizeFullScreen(elementId){
     /*计算并调整页页使用适应全屏*/
-    let bodyContainer = document.getElementById('bodyContainer');
+    let bodyContainer = document.getElementById(elementId);
     bodyContainer.style.minHeight = String(document.documentElement.clientHeight)+"px";
 }
 
@@ -240,4 +236,42 @@ export function genUniqueRandList(length){
         array[randIndex] = tempValue;
     }
     return array;
+}
+
+export function setElementFocusClick(element){
+    /*设置元素为可聚集且Enter键可触发Click事件*/
+    element.tabIndex = 0;
+    element.addEventListener('keydown', function(){
+        if (event.key === 'Enter'){
+            element.click();
+        }
+    });
+}
+
+export function setFocusClick(...elements){
+    /*设置元素为可聚集且Enter键可触发Click事件*/
+    for(let i = 0; i < elements.length; i++) {
+        setElementFocusClick(document.getElementById(elements[i]));
+    }
+}
+
+export function resetFocus(){
+    /*重置焦点*/
+    var firstFocusableElement = document.querySelector('input, button, a[href], textarea, [tabindex]:not([tabindex="-1"])');
+    if (firstFocusableElement) {
+        firstFocusableElement.focus();
+    }
+}
+
+export function escCloseModal(event, ...modals){
+    /*接受到Esc时关闭显示的弹窗*/
+    if (event.key === 'Escape' || event.key === 'Esc' || event.keyCode === 27) {
+        console.log(modals);
+        for(let i = 0; i < modals.length; i++) {
+            let popElement = document.getElementById(modals[i]);
+            if(!popElement.classList.contains(hiddenClass)){
+                hideModal(modals[i]);
+            }
+        }
+    }
 }

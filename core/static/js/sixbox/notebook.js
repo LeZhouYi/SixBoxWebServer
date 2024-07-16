@@ -62,6 +62,7 @@ function displayNoteBook(){
                 mceEditor.setContent(data.content);
             }
             BaseUtils.displayModal('readNbPopup');  //显示编辑弹窗
+            document.getElementById('displayNbName').focus();
         }
     });
 }
@@ -78,6 +79,7 @@ function addNbListItem(data, parent) {
             nowControlId = data.id;
             displayNoteBook();
         });
+        BaseUtils.setElementFocusClick(nameSpan);
         preIcon.src = "static/images/icons/file_text.png";  //设置来源
         preIcon.alt = "笔记";
     } else if (data.type == nbTypeEnum.FOLDER) {
@@ -159,6 +161,7 @@ var menubarSet = 'edit insert format tools'
 
 tinymce.init({
     selector: '#displayNbTinyMce',
+    inline: true,
     branding: true,
     elementpath: false,
     menubar: false,
@@ -277,14 +280,6 @@ document.getElementById('addConfirmBtn').addEventListener('click', function () {
             }
         });
 });
-
-window.onload = function(){
-    BaseUtils.resizeFullScreen();
-};
-
-window.addEventListener('resize', BaseUtils.throttle(function(){
-    BaseUtils.resizeFullScreen();
-}), 200);
 
 document.getElementById('deleteNbBtn').addEventListener('click', function () {
     /*点击删除笔记按钮*/
@@ -416,3 +411,17 @@ document.getElementById('searchNbInput').addEventListener('keydown', function(){
         document.getElementById('searchNbButton').click();
     }
 });
+
+document.addEventListener('keydown', function(event){
+    /*监听Esc并退出弹窗*/
+    BaseUtils.escCloseModal(event, 'addNbPopup', 'nbControlPopup', 'cfmDelPopup', 'editNbPopup', 'readNbPopup');
+});
+
+window.onload = function(){
+    BaseUtils.resizeFullScreen('bodyContainer');
+    BaseUtils.setFocusClick('searchNbButton', 'addNbButton');
+};
+
+window.addEventListener('resize', BaseUtils.throttle(function(){
+    BaseUtils.resizeFullScreen('bodyContainer');
+}), 200);

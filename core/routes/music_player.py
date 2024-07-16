@@ -116,10 +116,8 @@ def get_music_list():
     if search is None:
         return jsonify(MscServer.get_list(["id", "name", "artist"]))
     else:
-        search_query = (MscQuery.name == search) | (MscQuery.artist == search)
-        with MscServer.thread_lock:
-            result = MscDB.search(search_query)
-        return jsonify(MscServer.get_list(["id", "name", "artist"], result))
+        search_data = MscServer.search_data(search)
+        return jsonify(MscServer.get_list(["id", "name", "artist"], search_data))
 
 
 @MusicPlayerBp.route("/music/<music_id>", methods=["DELETE"])

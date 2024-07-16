@@ -50,6 +50,18 @@ class MusicServer:
                 return_data.append(copy.deepcopy(return_item))
             return return_data
 
+    def search_data(self, search_text: str):
+        """搜索数据"""
+        with self.thread_lock:
+            return_data = []
+            search_text = search_text.strip().lower()
+            for data in self.db.all():
+                if str(data["name"]).lower().find(search_text) > -1:
+                    return_data.append(data)
+                elif str(data["artist"]).lower().find(search_text) > -1:
+                    return_data.append(data)
+        return return_data
+
 
 class PlayCollectServer:
 

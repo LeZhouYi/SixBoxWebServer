@@ -175,7 +175,7 @@ function updateMscList(){
 document.getElementById('playPauseBtn').addEventListener('click', function(){
     /*点击播放音乐*/
     if (nowHowler == null){
-        if (nowMusicList == null | nowMusicList.length < 1){
+        if (nowMusicList == null || nowMusicList.length < 1){
             BaseUtils.displayMessage("当前合集没有歌曲可播放");
             return;
         }
@@ -420,7 +420,7 @@ document.getElementById('repeatModeBtn').addEventListener('click', function(){
 
 document.getElementById('skipForwardBtn').addEventListener('click', function(){
     /*下一首*/
-    if(nowMusicList == null | nowMusicList.length < 1){
+    if(nowMusicList == null || nowMusicList.length < 1){
         BaseUtils.displayMessage("当前合集没有歌曲可播放");
         return;
     }
@@ -468,7 +468,7 @@ document.getElementById('downloadMscBtn').addEventListener('click', function(){
 
 document.getElementById('skipBackBtn').addEventListener('click', function(){
     /*下一首*/
-    if(nowMusicList == null | nowMusicList.length < 1){
+    if(nowMusicList == null || nowMusicList.length < 1){
         BaseUtils.displayMessage("当前合集没有歌曲可播放");
         return;
     }
@@ -519,18 +519,26 @@ document.getElementById('playCollectBtn').addEventListener('click', function(eve
 document.getElementById('searchMscButton').addEventListener('click', function(){
     /*点击搜索音乐*/
     let inputText = document.getElementById('searchMscInput').value;
-    if (value == null | value == ''){
+    console.log(inputText);
+    if (inputText == null || inputText == ''){
         updateMscList();
     }else{
         BaseUtils.clearElementByStart('mpList', 2);
         let parentElement = document.getElementById('mpList');
-        let searchUrl = nowMusicRoute+"?search="+inputText;
-        BaseUtils.fetchData(nowMusicRoute).then(data=>{
+        let searchUrl = nowMusicRoute+"?search="+inputText
+        BaseUtils.fetchData(searchUrl).then(data=>{
             nowMusicList = data;
             nowRandList = BaseUtils.genUniqueRandList(nowMusicList.length);
             data.forEach(element=>{
                 addMscListItem(element, parentElement);
             });
         });
+    }
+});
+
+document.getElementById('searchMscInput').addEventListener('keydown', function(){
+    /*搜索栏按回车*/
+    if (event.keyCode == 13 || event.key == 'Enter'){
+        document.getElementById('searchMscButton').click();
     }
 });
