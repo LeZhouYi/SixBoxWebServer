@@ -29,7 +29,11 @@ RepoInfo = {
     "007": "新增成功",
     "008": "删除成功",
     "009": "歌曲名重复",
-    "010": "编辑成功"
+    "010": "编辑成功",
+    "011": "名称不能为空",
+    "012": "新建合集成功",
+    "013": "合集不存在",
+    "014": "删除合集成功"
 }
 
 
@@ -113,8 +117,17 @@ def add_music():
 def get_music_list():
     """获取音乐列表"""
     search = request.args.get("search", None, str)
+    collect = request.args.get("collect", None, str)
     if search is None:
-        return jsonify(MscServer.get_list(["id", "name", "artist"]))
+        if collect is None:
+            return jsonify(MscServer.get_list(["id", "name", "artist"]))
+        with PcServer.thread_lock:
+            try:
+                data = PcDB.get(PcQuery.id == collect)
+            except KeyError:
+                return route_utils.gen_fail_response(RepoInfo["013"])
+        return_data = MscServer.search_by_list(data["playList"])
+        return jsonify(MscServer.get_list(["id", "name", "artist"], return_data))
     else:
         search_data = MscServer.search_data(search)
         return jsonify(MscServer.get_list(["id", "name", "artist"], search_data))
@@ -177,3 +190,27 @@ def get_collect_list():
                 "name": item["name"]
             })
         return jsonify(data)
+
+
+@MusicPlayerBp.route("/music/collect", methods=["POST"])
+def add_collect():
+    """新增合集"""
+    data = request.json
+    if check_utils.is_str_empty(data, "name"):
+        return route_utils.gen_fail_response(RepoInfo["011"])
+    PcServer.add_data(data, MscServer)
+    return route_utils.gen_success_response(RepoInfo["012"])
+
+
+@MusicPlayerBp.route("/music/collect/<collect_id>", methods=["DELETE"])
+def del_collect(collect_id: str):
+    """删除合集"""
+    if check_utils.is_empty(collect_id):
+        return route_utils.gen_fail_response(RepoInfo["013"])
+    with PcServer.thread_lock:
+        try:
+            PcDB.get(PcQuery.id == collect_id)
+        except KeyError:
+            return route_utils.gen_fail_response(RepoInfo["013"])
+        PcDB.remove(PcQuery.id == collect_id)
+    return route_utils.gen_success_response(RepoInfo["014"])

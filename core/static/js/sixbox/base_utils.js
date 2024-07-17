@@ -266,12 +266,21 @@ export function resetFocus(){
 export function escCloseModal(event, ...modals){
     /*接受到Esc时关闭显示的弹窗*/
     if (event.key === 'Escape' || event.key === 'Esc' || event.keyCode === 27) {
-        console.log(modals);
         for(let i = 0; i < modals.length; i++) {
             let popElement = document.getElementById(modals[i]);
             if(!popElement.classList.contains(hiddenClass)){
                 hideModal(modals[i]);
             }
+        }
+    }
+}
+
+export function closeAllModal(event, ...modals){
+    /*关闭显示的弹窗*/
+    for(let i = 0; i < modals.length; i++) {
+        let popElement = document.getElementById(modals[i]);
+        if(!popElement.classList.contains(hiddenClass)){
+            hideModal(modals[i]);
         }
     }
 }

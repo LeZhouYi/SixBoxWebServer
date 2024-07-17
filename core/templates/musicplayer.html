@@ -176,10 +176,55 @@
         </div>
     </div>
 </div>
+<div id="collectCtrlPopup" class="popupOverlay hidden">
+    <div id="collectCtrlContent" class="controlContent">
+        <dl class="controlBtnList">
+            <dd><a id="addCollectBtn">新增合集</a></dd>
+        </dl>
+    </div>
+</div>
 <div id="mscCollectPopup" class="popupOverlay hidden">
     <div id="mscCollectContent" class="rightCtrlContent">
-        <dl id="mscCollectList" class="controlBtnList">
+        <dl id="mscCollectList" class="ctrlListContainer">
         </dl>
+    </div>
+</div>
+<div id="addCollectPopup" class="popupOverlay hidden">
+    <div id="addCollectContent" class="popupContent">
+        <div class="popupHeader">
+            <a class="headerText">新建合集</a>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">名称：</label>
+                <input type="text" id="addCltName" placeholder="请输入合集名称"/>
+            </div>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer gapDefault">
+            <div id="addCtlCfmBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="addCtlCclBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="cfmDelPcPopup" class="popupOverlay hidden">
+    <div id="cfmDelPcContent" class="cfmDelContent">
+        <div class="header">
+            <a class="headerText">确认删除</a>
+        </div>
+        <div>
+            <div id="cfmDelPcBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="cclDelPcBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
     </div>
 </div>
 <script type="module" src="{{url_for('static', filename='js/howler/howler.js')}}"></script>

@@ -45,7 +45,7 @@ def download_data():
 
 def check_file_type(file: Optional[FileStorage]):
     """检查文件类型"""
-    file_types = ['png', 'mp4', 'mp3']
+    file_types = ['png', 'mp4', 'mp3', 'jpg', 'pdf']
     if file.filename is None or file.filename.rsplit('.', 1)[1].lower() not in file_types:
         return route_utils.gen_fail_response(RepoInfo["001"])
 

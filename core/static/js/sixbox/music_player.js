@@ -13,6 +13,9 @@ var nowRandList = null;
 var nowPlayMode = playMode.ORDER;  //播放模式
 
 var nowControlId = null;  //当前操作的音乐文件ID
+var nowCollectId = null;  //当前操作的音乐合集,null表示全部合集
+var nowCtrlCollectId = null;
+
 
 function onPlayError(error){
     BaseUtils.displayMessage("播放错误");
@@ -97,9 +100,7 @@ function loadPlayMusic(){
             onerror: onPlayError,
         });
         playMusic();
-        console.log(nowMusicList);
         let musicInfo = nowMusicList[findNowIndex()];
-        console.log(musicInfo);
         document.getElementById('nowPlayMusicText').text = '> 正在播放: '+musicInfo.artist + '-' + musicInfo.name;
     });
 }
@@ -159,16 +160,60 @@ function findNowIndex(){
     return -1;
 }
 
-function updateMscList(){
+function updateMscList(callback){
     /* 请求/bookmarks接口并刷新当前页面的书签列表内容 */
     BaseUtils.clearElementByStart('mpList', 2);
     let parentElement = document.getElementById('mpList');
-    BaseUtils.fetchData(nowMusicRoute).then(data=>{
+
+    let searchUrl = nowMusicRoute;
+    if (nowCollectId !== null){
+        searchUrl = nowMusicRoute+"?collect="+nowCollectId;
+    }
+    BaseUtils.fetchData(searchUrl).then(data=>{
         nowMusicList = data;
         nowRandList = BaseUtils.genUniqueRandList(nowMusicList.length);
         data.forEach(element=>{
             addMscListItem(element, parentElement);
         });
+        if (callback){
+            callback();
+        }
+    });
+}
+
+function bindClickCollect(collectElement, collectId, collectName){
+    /*绑定点击合集事件*/
+    collectElement.addEventListener('click', function(){
+        nowCollectId = collectId;
+        nowMusicId = null;
+        nowMusicList = [];
+        updateMscList(function(){
+            document.getElementById('nowPlayCollectText').text = collectName;
+            document.getElementById('skipForwardBtn').click();
+        });
+        BaseUtils.hideModal('mscCollectPopup');
+    })
+}
+
+function addDefaultCollect(parentElement){
+    /*添加默认合集*/
+    let itemTextSpan = document.createElement('a');
+    itemTextSpan.text = '全部列表';
+    itemTextSpan.classList.add('clickable');
+    BaseUtils.setElementFocusClick(itemTextSpan);
+    bindClickCollect(itemTextSpan, null, '全部列表')
+
+    let itemElement = document.createElement('dd');
+    itemElement.classList.add('ctrlListItem');
+    itemElement.appendChild(itemTextSpan);
+    parentElement.appendChild(itemElement);
+}
+
+function bindCollectDel(parentElement, collectId){
+    parentElement.addEventListener('click', function(){
+        nowCtrlCollectId = collectId;
+        BaseUtils.hideModal('mscCollectPopup');
+        BaseUtils.displayModal('cfmDelPcPopup');
     });
 }
 
@@ -261,26 +306,6 @@ document.getElementById('addMscCfmBtn').addEventListener('click', function(){
 document.addEventListener('DOMContentLoaded', (event) => {
     /*页面首次加载，刷新当前书签列表*/
     updateMscList();
-});
-
-document.addEventListener('click', function(event){
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'mscVolumePopup', 'mscVolumeContent');
-});
-
-document.addEventListener('click', function(event){
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'mscControlPopup', 'mscControlContent');
-});
-
-document.addEventListener('click', function(event){
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'cfmDelPopup', 'cfmDelContent');
-});
-
-document.addEventListener('click', function(event){
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'editMscPopup', 'editMscContent');
 });
 
 document.getElementById('musicVolumeBtn').addEventListener('click', function(){
@@ -498,20 +523,46 @@ document.addEventListener('click', function(event){
 
 document.getElementById('playCollectBtn').addEventListener('click', function(event){
     /*点击音乐合集按钮*/
-    let collectListUrl = nowMusicRoute+"/collect";
+    let collectListUrl = nowMusicRoute+'/collect';
     BaseUtils.fetchData(collectListUrl).then(data=>{
+        let parentElement = document.getElementById('mscCollectList');
+        parentElement.innerHTML = '';
+        addDefaultCollect(parentElement);
+        data.forEach(element=>{
+           let itemDelImg = document.createElement('img');
+           itemDelImg.src = '/static/images/icons/trash_2.png';
+           itemDelImg.classList.add('bmIcon', 'clickable');
+           bindCollectDel(itemDelImg, element.id);
+
+           let itemEditImg = document.createElement('img');
+           itemEditImg.src = '/static/images/icons/edit.png';
+           itemEditImg.classList.add('bmIcon', 'clickable');
+
+           let itemTextSpan = document.createElement('a');
+           itemTextSpan.text = element.name;
+           itemTextSpan.classList.add('clickable');
+           BaseUtils.setElementFocusClick(itemTextSpan);
+           bindClickCollect(itemTextSpan, element.id, element.name);
+
+           let itemElement = document.createElement('dd');
+           itemElement.classList.add('ctrlListItem');
+           itemElement.appendChild(itemTextSpan);
+           itemElement.appendChild(itemEditImg);
+           itemElement.appendChild(itemDelImg);
+           parentElement.appendChild(itemElement);
+        });
     });
 
     let element = document.getElementById('mscCollectContent');
-    element.style.left = event.clientX + 'px';
-    element.style.top = event.clientY + 'px';
+    let rect = event.target.getBoundingClientRect();
+    element.style.left = rect.left + 'px';
+    element.style.top = rect.top + 'px';
     BaseUtils.displayModal('mscCollectPopup');
 });
 
 document.getElementById('searchMscButton').addEventListener('click', function(){
     /*点击搜索音乐*/
     let inputText = document.getElementById('searchMscInput').value;
-    console.log(inputText);
     if (inputText == null || inputText == ''){
         updateMscList();
     }else{
@@ -535,6 +586,83 @@ document.getElementById('searchMscInput').addEventListener('keydown', function()
     }
 });
 
+document.getElementById('musicMoreCtrlBtn').addEventListener('click', function(){
+    /*点击更多操作按钮*/
+    let element = document.getElementById('collectCtrlPopup');
+    let rect = event.target.getBoundingClientRect();
+    element.style.left = rect.left + 'px';
+    element.style.top = rect.top + 'px';
+    BaseUtils.displayModal('collectCtrlPopup');
+});
+
+document.getElementById('addCollectBtn').addEventListener('click', function(){
+    /*点击新增合集按钮*/
+    BaseUtils.hideModal('collectCtrlPopup');
+    BaseUtils.displayModal('addCollectPopup');
+});
+
+document.getElementById('addCtlCclBtn').addEventListener('click', function(){
+    /*点击取消新增合集*/
+    BaseUtils.hideModal('addCollectPopup');
+    document.getElementById('addCltName').value = '';
+});
+
+document.getElementById('addCtlCfmBtn').addEventListener('click', function(){
+    /*确认新增合集*/
+    let addUrl = nowMusicRoute+"/collect";
+    let cltName = document.getElementById('addCltName');
+    BaseUtils.fetchWithConfig(addUrl, {
+        method: "POST",
+        "headers":{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: cltName.value
+        })
+    })
+    .then(data=>{
+        if (data.status == "Fail"){
+            BaseUtils.displayMessage(data.message);  //显示错误信息弹窗
+        }
+        else{
+            BaseUtils.displayMessage(data.message, 1000, 'green');  //显示新增成功信息弹窗
+            BaseUtils.hideModal('addCollectPopup');
+        }
+    });
+})
+
+document.getElementById('cclDelPcBtn').addEventListener('click', function(){
+    /*取消删除合集*/
+    BaseUtils.hideModal('cfmDelPcPopup');
+});
+
+document.getElementById('cfmDelPcBtn').addEventListener('click', function(){
+    /*确认删除*/
+    let delUrl = nowMusicRoute+"/collect/"+nowCtrlCollectId;
+    BaseUtils.fetchWithConfig(delUrl, {
+        method: "DELETE"
+    })
+    .then(data=>{
+        if(data.status == 'Fail'){
+            BaseUtils.displayMessage(data.message);  //显示错误信息弹窗
+        }else{
+            BaseUtils.displayMessage(data.message, 1000, 'green');  //显示新增成功信息弹窗
+            BaseUtils.hideModal('cfmDelPcPopup');
+            if(nowCtrlCollectId == nowCollectId){
+                nowCollectId = null;
+                document.getElementById('nowPlayCollectText').text = '全部合集';
+                updateMscList(function(){
+                    document.getElementById('skipForwardBtn').click();
+                });
+            }
+        }
+    });
+});
+
+document.getElementById('nowPlayCollectText').addEventListener('click', function(){
+    document.getElementById('playCollectBtn').click();
+});
+
 window.onload = function(){
     BaseUtils.resizeFullScreen('bodyContainer');
 };
@@ -542,3 +670,20 @@ window.onload = function(){
 window.addEventListener('resize', BaseUtils.throttle(function(){
     BaseUtils.resizeFullScreen('bodyContainer');
 }), 200);
+
+window.addEventListener('resize', BaseUtils.throttle(function(){
+    BaseUtils.closeAllModal(event, 'mscVolumePopup', 'mscControlPopup', 'cfmDelPopup', 'editMscPopup');
+    BaseUtils.closeAllModal(event, 'collectCtrlPopup', 'messagePopup', 'addMscPopup', 'addCollectPopup');
+    BaseUtils.closeAllModal(event, 'cfmDelPcPopup');
+}), 1000);
+
+document.addEventListener('click', function(event){
+    /*监听文档点击事件，检查点击是否在弹窗外部*/
+    BaseUtils.checkClickModalPopup(event, 'mscVolumePopup', 'mscVolumeContent');
+    BaseUtils.checkClickModalPopup(event, 'mscControlPopup', 'mscControlContent');
+    BaseUtils.checkClickModalPopup(event, 'cfmDelPopup', 'cfmDelContent');
+    BaseUtils.checkClickModalPopup(event, 'editMscPopup', 'editMscContent');
+    BaseUtils.checkClickModalPopup(event, 'collectCtrlPopup', 'collectCtrlContent');
+    BaseUtils.checkClickModalPopup(event, 'addCollectPopup', 'addCollectContent');
+    BaseUtils.checkClickModalPopup(event, 'cfmDelPcPopup', 'cfmDelPcContent');
+});

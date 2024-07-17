@@ -62,6 +62,18 @@ class MusicServer:
                     return_data.append(data)
         return return_data
 
+    def search_by_list(self, play_list: list):
+        """获取列表中的歌曲"""
+        return_data = []
+        with self.thread_lock:
+            for msc_id in play_list:
+                try:
+                    data = self.db.get(self.msc_query.id == msc_id)
+                    return_data.append(data)
+                except KeyError:
+                    pass
+        return return_data
+
 
 class PlayCollectServer:
 

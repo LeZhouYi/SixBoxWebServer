@@ -205,31 +205,6 @@ tinymce.init({
     height: '350px'
 });
 
-document.addEventListener('click', function (event) {
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'readNbPopup', 'readNbContent');
-});
-
-document.addEventListener('click', function (event) {
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'addNbPopup', 'addNbContent');
-});
-
-document.addEventListener('click', function (event) {
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'nbControlPopup', 'nbControlContent');
-});
-
-document.addEventListener('click', function (event) {
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'cfmDelPopup', 'cfmDelContent');
-});
-
-document.addEventListener('click', function (event) {
-    /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'editNbPopup', 'editNbContent');
-});
-
 document.getElementById('addCancelBtn').addEventListener('click', function () {
     /*点击新增笔记的取消按钮*/
     BaseUtils.hideModal('addNbPopup');
@@ -430,6 +405,15 @@ window.onload = function(){
     BaseUtils.setFocusClick('editNbBtn', 'deleteNbBtn', 'editConfirmBtn', 'editCancelBtn');
     BaseUtils.setFocusClick('confirmDelBtn', 'cancelDelBtn');
 };
+
+document.addEventListener('click', function(event){
+    /*监听文档点击事件，检查点击是否在弹窗外部*/
+    BaseUtils.checkClickModalPopup(event, 'readNbPopup', 'readNbContent');
+    BaseUtils.checkClickModalPopup(event, 'addNbPopup', 'addNbContent');
+    BaseUtils.checkClickModalPopup(event, 'nbControlPopup', 'nbControlContent');
+    BaseUtils.checkClickModalPopup(event, 'cfmDelPopup', 'cfmDelContent');
+    BaseUtils.checkClickModalPopup(event, 'editNbPopup', 'editNbContent');
+});
 
 window.addEventListener('resize', BaseUtils.throttle(function(){
     BaseUtils.resizeFullScreen('bodyContainer');

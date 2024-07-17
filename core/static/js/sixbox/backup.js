@@ -40,5 +40,5 @@ window.onload = function(){
 };
 
 window.addEventListener('resize', BaseUtils.throttle(function(){
-    BaseUtils.resizeFullScreen();
+    BaseUtils.resizeFullScreen('bodyContainer');
 }), 200);

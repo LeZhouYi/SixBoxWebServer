@@ -25,9 +25,9 @@
     --hover-color: #F5FFFA;  /*按键悬停颜色*/
     --hover-transition: #F5FFFA 0.3s ease;  /*悬停过渡*/
     --input-item-height: 32px; /*表单单行高度*/
-    --input-gap: 10px;
-    --input-label-width: 70px;
-    --list-gap: 3px;
+    --input-gap: 10px;  /*表单单行内元素间距*/
+    --input-label-width: 70px;  /*表单Label文本宽度*/
+    --list-gap: 3px;  /*列表间距*/
 
     --music-panel-height: 80px; /*音乐播放器高度*/
     --cover-background: #336699;  /*封面背景颜色*/
@@ -64,7 +64,7 @@ body, html {
     padding: 0;
     font-size: var(--base-font-size);
 }
-a[href]:focus-visible {
+a:focus-visible {
     outline: var(--outline-focus-visible);
     outline-offset: 0;
 }
@@ -257,8 +257,6 @@ a[href]:focus-visible {
     font-size: var(--main-font-size);
     display: flex;
     align-items: center;
-}
-.nbTinyMceField{
 }
 .nbTinyMceField>div:last-child{
     height: 100%;
@@ -472,7 +470,7 @@ a[href]:focus-visible {
 .musicScrollBar>div{
     display: flex;
     justify-content: center;
-    align-center: center;
+    align-items: center;
     width: var(--time-text-width);
 }
 .musicProcess{
@@ -588,6 +586,26 @@ a[href]:focus-visible {
     gap: var(--base-gap);
     flex-grow: 1;
     padding: var(--input-gap) 0;
+}
+
+.ctrlListContainer{
+    display: flex;
+    flex-direction: column;
+    font-size: var(--main-font-size);
+    gap: var(--input-gap);
+}
+
+.ctrlListItem{
+    margin: 0px var(--input-gap);
+    gap: var(--input-gap);
+    display: flex;
+    flex-direction: row;
+}
+.ctrlListItem>a{
+    width: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 @media (max-device-width: 600px){
@@ -709,7 +727,7 @@ a[href]:focus-visible {
     border: var(--base-border);
     border-radius: var(--base-radius);
     background-color: var(--control-background);
-    height: var(--control-bar-height)
+    height: var(--control-bar-height);
     margin: auto;
 }
 .volumeCtrlContent>div{
@@ -729,7 +747,7 @@ a[href]:focus-visible {
         transform: translate(-50%, -50%);
         border: var(--base-border);
         border-radius: var(--base-radius);
-        padding: var(--base-padding);
+        padding: calc(var(--base-padding) / 2);
         background-color: var(--control-background);
         z-index: 1;
         box-sizing: border-box;
