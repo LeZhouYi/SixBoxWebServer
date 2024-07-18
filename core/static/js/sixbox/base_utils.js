@@ -69,17 +69,6 @@ export function fetchBlob(url){
     });
 }
 
-export function decodeRFC5987(fileName){
-    /*解码文件名*/
-    let charsetEnd = fileName.indexOf("'");
-    if (charsetEnd === -1) {
-        return fileName;
-    }
-    let encodedName = fileName.slice(charsetEnd + 2);
-    let actualName = decodeURIComponent(encodedName.replace(/\+/g, ' ')); // 处理空格编码（如果有的话）
-    return actualName;
-}
-
 export function fetchFile(url){
     /*默认GET接口请求文件并下载的方法，忽视Error*/
     let fileName = null;
@@ -89,10 +78,10 @@ export function fetchFile(url){
         }
         if (response.headers.has('Content-Disposition')) {
             const contentDisposition = response.headers.get('Content-Disposition');
-            const fileNameRegex = /filename=([\w\d-'" ]+[.\w]+)/;
+            const fileNameRegex = /filename(?:="{0,1}[\d\w-]+''|=)(([^"\s]|[ ])+)"{0,1}/;
             const matches = contentDisposition.match(fileNameRegex);
             if (matches && matches.length > 1) {
-                fileName =decodeRFC5987(matches[1]); // 提取文件名
+                fileName =decodeURIComponent(matches[1]); // 提取文件名
             }
         }
         return response.blob();
@@ -281,4 +270,19 @@ export function closeAllModal(event, ...modals){
             hideModal(modals[i]);
         }
     }
+}
+
+export function adjustPopup(elementId, rect){
+    /*调整弹窗的显示位置*/
+    let popUpElement = document.getElementById(elementId);
+    let popRect = popUpElement.getBoundingClientRect();
+    console.log(rect.top+popRect.height);
+    console.log(window.innerHeight);
+    if (rect.top+popRect.height > window.innerHeight){
+        popUpElement.style.top = (window.innerHeight - popRect.height - 15) + 'px';
+        console.log(popUpElement.style.top);
+    }else{
+        popUpElement.style.top = rect.top + 'px';
+    }
+    popUpElement.style.left = rect.left + 'px';
 }

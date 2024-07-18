@@ -41,9 +41,7 @@ function bindControlBtnClick(element, nbId) {
 
         /*调整元素位置*/
         let element = document.getElementById('nbControlContent');
-        let rect = event.target.getBoundingClientRect();
-        element.style.left = rect.left + 'px';
-        element.style.top = rect.top + 'px';
+        BaseUtils.adjustPopup('nbControlContent', event.target.getBoundingClientRect());
     });
 }
 

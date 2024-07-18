@@ -17,10 +17,7 @@ function bindControlBtnClick(element, bmId){
 
         /*调整元素位置*/
         let element = document.getElementById('bmControlContent');
-        let rect = event.target.getBoundingClientRect();
-        element.style.left = rect.left + 'px';
-        element.style.top = rect.top + 'px';
-
+        BaseUtils.adjustPopup('bmControlContent', event.target.getBoundingClientRect());
         document.getElementById('editBmBtn').focus();
     });
 }

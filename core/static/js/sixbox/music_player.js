@@ -571,12 +571,8 @@ document.getElementById('playCollectBtn').addEventListener('click', function(eve
            parentElement.appendChild(itemElement);
         });
     });
-
-    let element = document.getElementById('mscCollectContent');
-    let rect = event.target.getBoundingClientRect();
-    element.style.left = rect.left + 'px';
-    element.style.top = rect.top + 'px';
     BaseUtils.displayModal('mscCollectPopup');
+    BaseUtils.adjustPopup('mscCollectContent', event.target.getBoundingClientRect());
 });
 
 document.getElementById('searchMscButton').addEventListener('click', function(){
@@ -607,11 +603,8 @@ document.getElementById('searchMscInput').addEventListener('keydown', function()
 
 document.getElementById('musicMoreCtrlBtn').addEventListener('click', function(){
     /*点击更多操作按钮*/
-    let element = document.getElementById('collectCtrlPopup');
-    let rect = event.target.getBoundingClientRect();
-    element.style.left = rect.left + 'px';
-    element.style.top = rect.top + 'px';
     BaseUtils.displayModal('collectCtrlPopup');
+    BaseUtils.adjustPopup('collectCtrlContent', event.target.getBoundingClientRect());
 });
 
 document.getElementById('addCollectBtn').addEventListener('click', function(){
