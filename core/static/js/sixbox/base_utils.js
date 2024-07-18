@@ -19,7 +19,6 @@ export function hideModal(elementId){
     let element = document.getElementById(elementId);
     element.classList.add(hiddenClass);
     document.body.classList.remove('modalOpen');
-    resetFocus()
 }
 
 export function displayElement(elementId){
@@ -40,8 +39,7 @@ export function checkClickModalPopup(event, containerId, contentId){
     let content = document.getElementById(contentId);
     // 检查点击是否在弹窗或其子元素上
     if(!content.contains(event.target) && container.contains(event.target)){
-        container.classList.add(hiddenClass);  // 不是，则隐藏弹窗
-        resetFocus();
+        hideModal(containerId);  // 不是，则隐藏弹窗
     }
 }
 

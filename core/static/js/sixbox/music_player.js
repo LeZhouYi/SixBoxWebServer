@@ -217,6 +217,22 @@ function bindCollectDel(parentElement, collectId){
     });
 }
 
+function bindCollectEdit(parentElement, collectId){
+    parentElement.addEventListener('click', function(){
+        nowCtrlCollectId = collectId;
+        BaseUtils.hideModal('mscCollectPopup');
+        let detailUrl = nowMusicRoute + '/collect/' + nowCtrlCollectId;
+        BaseUtils.fetchWithConfig(detailUrl).then(data => {
+            if (data.status != undefined) {
+                BaseUtils.displayMessage(data.message);
+            } else {
+                document.getElementById('editCltName').value = data.name;  //笔记名称
+                BaseUtils.displayModal('editCollectPopup');  //显示编辑弹窗
+            }
+        });
+    });
+}
+
 document.getElementById('playPauseBtn').addEventListener('click', function(){
     /*点击播放音乐*/
     if (nowHowler == null){
@@ -250,6 +266,8 @@ document.getElementById('addMscFile').addEventListener('change', function(event)
         }else{
             document.getElementById('addMscFileText').value = file.name;
         }
+    }else{
+        document.getElementById('addMscFileText').value = '';
     }
 });
 
@@ -537,6 +555,7 @@ document.getElementById('playCollectBtn').addEventListener('click', function(eve
            let itemEditImg = document.createElement('img');
            itemEditImg.src = '/static/images/icons/edit.png';
            itemEditImg.classList.add('bmIcon', 'clickable');
+           bindCollectEdit(itemEditImg, element.id);
 
            let itemTextSpan = document.createElement('a');
            itemTextSpan.text = element.name;
@@ -663,6 +682,36 @@ document.getElementById('nowPlayCollectText').addEventListener('click', function
     document.getElementById('playCollectBtn').click();
 });
 
+document.getElementById('editCtlCclBtn').addEventListener('click', function(){
+    BaseUtils.hideModal('editCollectPopup');
+});
+
+document.getElementById('editCtlCfmBtn').addEventListener('click', function(){
+    let editUrl = nowMusicRoute+'/collect/'+nowCtrlCollectId;
+    let pcName = document.getElementById('editCltName');
+    BaseUtils.fetchWithConfig(editUrl, {
+        method: 'PUT',
+        'headers': {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: pcName.value
+        })
+    })
+    .then(data=>{
+        if (data.status == "Fail"){
+            BaseUtils.displayMessage(data.message);  //显示错误信息弹窗
+        }
+        else{
+            BaseUtils.displayMessage(data.message, 1000, 'green');  //显示新增成功信息弹窗
+            BaseUtils.hideModal('editCollectPopup');
+            if(nowCtrlCollectId == nowCollectId){
+                document.getElementById('nowPlayCollectText').text = pcName.value;
+            }
+        }
+    });
+});
+
 window.onload = function(){
     BaseUtils.resizeFullScreen('bodyContainer');
 };
@@ -670,12 +719,6 @@ window.onload = function(){
 window.addEventListener('resize', BaseUtils.throttle(function(){
     BaseUtils.resizeFullScreen('bodyContainer');
 }), 200);
-
-window.addEventListener('resize', BaseUtils.throttle(function(){
-    BaseUtils.closeAllModal(event, 'mscVolumePopup', 'mscControlPopup', 'cfmDelPopup', 'editMscPopup');
-    BaseUtils.closeAllModal(event, 'collectCtrlPopup', 'messagePopup', 'addMscPopup', 'addCollectPopup');
-    BaseUtils.closeAllModal(event, 'cfmDelPcPopup');
-}), 1000);
 
 document.addEventListener('click', function(event){
     /*监听文档点击事件，检查点击是否在弹窗外部*/
@@ -686,4 +729,5 @@ document.addEventListener('click', function(event){
     BaseUtils.checkClickModalPopup(event, 'collectCtrlPopup', 'collectCtrlContent');
     BaseUtils.checkClickModalPopup(event, 'addCollectPopup', 'addCollectContent');
     BaseUtils.checkClickModalPopup(event, 'cfmDelPcPopup', 'cfmDelPcContent');
+    BaseUtils.checkClickModalPopup(event, 'editCollectPopup', 'editCollectContent');
 });

@@ -120,6 +120,7 @@
 <div id="mscControlPopup" class="popupOverlay hidden">
     <div id="mscControlContent" class="controlContent">
         <dl class="controlBtnList">
+            <dd><a id="collectMusicBtn">添加合集</a></dd>
             <dd><a id="downloadMscBtn">下载</a></dd>
             <dd><a id="editMscBtn">编辑</a></dd>
             <dd><a id="deleteMscBtn">删除</a></dd>
@@ -192,7 +193,7 @@
 <div id="addCollectPopup" class="popupOverlay hidden">
     <div id="addCollectContent" class="popupContent">
         <div class="popupHeader">
-            <a class="headerText">新建合集</a>
+            <a class="headerText">新增合集</a>
         </div>
         <div class="bmInputSpan"></div>
         <div class="bmInputContainer">
@@ -207,6 +208,29 @@
                 <a>确认</a>
             </div>
             <div id="addCtlCclBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="editCollectPopup" class="popupOverlay hidden">
+    <div id="editCollectContent" class="popupContent">
+        <div class="popupHeader">
+            <a class="headerText">编辑合集</a>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">名称：</label>
+                <input type="text" id="editCltName" placeholder="请输入合集名称"/>
+            </div>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer gapDefault">
+            <div id="editCtlCfmBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="editCtlCclBtn" class="controlButton clickable">
                 <a>取消</a>
             </div>
         </div>

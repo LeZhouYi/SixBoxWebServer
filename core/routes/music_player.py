@@ -33,7 +33,9 @@ RepoInfo = {
     "011": "名称不能为空",
     "012": "新建合集成功",
     "013": "合集不存在",
-    "014": "删除合集成功"
+    "014": "删除合集成功",
+    "015": "编辑成功",
+    "016": "歌曲已存在"
 }
 
 
@@ -42,7 +44,7 @@ def backup_page():
     return render_template("musicplayer.html")
 
 
-@MusicPlayerBp.route("/music/<music_id>/file")
+@MusicPlayerBp.route("/music/<music_id>/file", methods=["GET"])
 def get_music_file(music_id: str):
     if check_utils.is_empty(music_id):
         return route_utils.gen_fail_response(RepoInfo["001"])
@@ -57,7 +59,7 @@ def get_music_file(music_id: str):
         return route_utils.gen_fail_response(RepoInfo["001"])
 
 
-@MusicPlayerBp.route("/music/<music_id>")
+@MusicPlayerBp.route("/music/<music_id>", methods=["GET"])
 def get_music(music_id: str):
     if check_utils.is_empty(music_id):
         return route_utils.gen_fail_response(RepoInfo["001"])
@@ -97,6 +99,10 @@ def add_music():
         if result is not None:
             return result
         filename = "%s-%s.mp3" % (form_data.get("artist"), form_data.get("name"))
+        with MscServer.thread_lock:
+            if len(MscDB.search(
+                    MscQuery.artist == form_data.get("artist") and MscQuery.name == form_data.get("name"))) > 0:
+                return route_utils.gen_fail_response(RepoInfo["016"])
         filepath = os.path.join(get_config("music_save_path"), filename)
         file.save(filepath)
         data = {
@@ -192,6 +198,19 @@ def get_collect_list():
         return jsonify(data)
 
 
+@MusicPlayerBp.route("/music/collect/<collect_id>", methods=["GET"])
+def get_detail(collect_id: str):
+    """获取合集详情"""
+    if check_utils.is_empty(collect_id):
+        return route_utils.gen_fail_response(RepoInfo["013"])
+    with PcServer.thread_lock:
+        try:
+            data = PcDB.get(PcQuery.id == collect_id)
+        except KeyError:
+            return route_utils.gen_fail_response(RepoInfo["013"])
+    return jsonify(data)
+
+
 @MusicPlayerBp.route("/music/collect", methods=["POST"])
 def add_collect():
     """新增合集"""
@@ -214,3 +233,21 @@ def del_collect(collect_id: str):
             return route_utils.gen_fail_response(RepoInfo["013"])
         PcDB.remove(PcQuery.id == collect_id)
     return route_utils.gen_success_response(RepoInfo["014"])
+
+
+@MusicPlayerBp.route("/music/collect/<collect_id>", methods=["PUT"])
+def edit_collect(collect_id):
+    """编辑合集"""
+    if check_utils.is_empty(collect_id):
+        return route_utils.gen_fail_response(RepoInfo["013"])
+    data = request.json
+    if check_utils.is_str_empty(data, "name"):
+        return route_utils.gen_fail_response(RepoInfo["011"])
+    with PcServer.thread_lock:
+        try:
+            now_data = PcDB.get(PcQuery.id == collect_id)
+        except KeyError:
+            return route_utils.gen_fail_response(RepoInfo["013"])
+    data["playList"] = now_data["playList"]
+    PcServer.edit_data(data, MscServer, collect_id)
+    return route_utils.gen_success_response(RepoInfo["015"])

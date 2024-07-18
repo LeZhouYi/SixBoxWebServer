@@ -107,3 +107,19 @@ class PlayCollectServer:
                 data["playList"] = actual_play_list
                 data["id"] = "%s%s" % (int(time.time()), str(self.rand.randint(100, 999)))
                 self.db.insert(data)
+
+    def edit_data(self, data: dict, msc_server: MusicServer, collect_id: str):
+        """编辑合集"""
+        with msc_server.thread_lock:
+            with self.thread_lock:
+                msc_query = msc_server.msc_query
+                key_list = ["name", "playList"]
+                data = data_utils.extra_data(data, key_list)
+                if data["playList"] is None or not isinstance(data["playList"], list):
+                    data["playList"] = []
+                actual_play_list = []
+                for msc_id in data["playList"]:
+                    if len(msc_server.db.search(msc_query.id == msc_id)) > 0:
+                        actual_play_list.append(msc_id)
+                data["playList"] = actual_play_list
+                self.db.update(data, (self.pc_query.id == collect_id))
