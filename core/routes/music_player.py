@@ -35,7 +35,9 @@ RepoInfo = {
     "013": "合集不存在",
     "014": "删除合集成功",
     "015": "编辑成功",
-    "016": "歌曲已存在"
+    "016": "歌曲已存在",
+    "017": "添加歌曲至合集成功",
+    "018": "成功从合集中移出"
 }
 
 
@@ -251,3 +253,52 @@ def edit_collect(collect_id):
     data["playList"] = now_data["playList"]
     PcServer.edit_data(data, MscServer, collect_id)
     return route_utils.gen_success_response(RepoInfo["015"])
+
+
+@MusicPlayerBp.route("/music/<music_id>/star", methods=["PUT"])
+def star_music(music_id: str):
+    if check_utils.is_empty(music_id):
+        return route_utils.gen_fail_response(RepoInfo["001"])
+    data = request.json
+    if check_utils.is_str_empty(data, "collectId"):
+        return route_utils.gen_fail_response(RepoInfo["013"])
+    with MscServer.thread_lock:
+        with PcServer.thread_lock:
+            try:
+                MscDB.get(MscQuery.id == music_id)
+            except KeyError:
+                return route_utils.gen_fail_response(RepoInfo["001"])
+            try:
+                now_data = PcDB.get(PcQuery.id == data["collectId"])
+            except KeyError:
+                return route_utils.gen_fail_response(RepoInfo["013"])
+            play_list = now_data["playList"]
+            if music_id not in play_list:
+                now_data["playList"].append(music_id)
+            PcDB.update(now_data, PcQuery.id == data["collectId"])
+    return route_utils.gen_success_response(RepoInfo["017"])
+
+
+@MusicPlayerBp.route("/music/<music_id>/remove_star", methods=["PUT"])
+def remove_star_music(music_id: str):
+    if check_utils.is_empty(music_id):
+        return route_utils.gen_fail_response(RepoInfo["001"])
+    data = request.json
+    if check_utils.is_str_empty(data, "collectId"):
+        return route_utils.gen_fail_response(RepoInfo["013"])
+    with MscServer.thread_lock:
+        with PcServer.thread_lock:
+            try:
+                MscDB.get(MscQuery.id == music_id)
+            except KeyError:
+                return route_utils.gen_fail_response(RepoInfo["001"])
+            try:
+                now_data = PcDB.get(PcQuery.id == data["collectId"])
+            except KeyError:
+                return route_utils.gen_fail_response(RepoInfo["013"])
+            play_list = now_data["playList"]
+            if music_id in play_list:
+                play_list.remove(music_id)
+                now_data["playList"] = play_list
+            PcDB.update(now_data, PcQuery.id == data["collectId"])
+    return route_utils.gen_success_response(RepoInfo["018"])

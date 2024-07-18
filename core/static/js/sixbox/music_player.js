@@ -201,12 +201,12 @@ function addDefaultCollect(parentElement){
     itemTextSpan.text = '全部列表';
     itemTextSpan.classList.add('clickable');
     BaseUtils.setElementFocusClick(itemTextSpan);
-    bindClickCollect(itemTextSpan, null, '全部列表')
 
     let itemElement = document.createElement('dd');
     itemElement.classList.add('ctrlListItem');
     itemElement.appendChild(itemTextSpan);
     parentElement.appendChild(itemElement);
+    return itemTextSpan;
 }
 
 function bindCollectDel(parentElement, collectId){
@@ -229,6 +229,30 @@ function bindCollectEdit(parentElement, collectId){
                 document.getElementById('editCltName').value = data.name;  //笔记名称
                 BaseUtils.displayModal('editCollectPopup');  //显示编辑弹窗
             }
+        });
+    });
+}
+
+function bindStarMusic(parentElement, collectId){
+    nowCtrlCollectId = collectId;
+    parentElement.addEventListener('click', function(){
+        let detailUrl = nowMusicRoute + '/' + nowControlId+ "/star";
+        BaseUtils.fetchWithConfig(detailUrl,{
+            method: 'PUT',
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                collectId: nowCtrlCollectId
+            })
+        })
+        .then(data => {
+            if (data.status == "Fail") {
+                BaseUtils.displayMessage(data.message);
+            } else {
+                BaseUtils.displayMessage(data.message, 1000, 'green');
+            }
+            BaseUtils.hideModal('mscAddCltPopup');
         });
     });
 }
@@ -545,7 +569,8 @@ document.getElementById('playCollectBtn').addEventListener('click', function(eve
     BaseUtils.fetchData(collectListUrl).then(data=>{
         let parentElement = document.getElementById('mscCollectList');
         parentElement.innerHTML = '';
-        addDefaultCollect(parentElement);
+        let defaultElement = addDefaultCollect(parentElement);
+        bindClickCollect(defaultElement, null, '全部列表')
         data.forEach(element=>{
            let itemDelImg = document.createElement('img');
            itemDelImg.src = '/static/images/icons/trash_2.png';
@@ -705,6 +730,68 @@ document.getElementById('editCtlCfmBtn').addEventListener('click', function(){
     });
 });
 
+document.getElementById('collectMusicBtn').addEventListener('click', function(){
+    event.stopPropagation();
+    let collectListUrl = nowMusicRoute+'/collect';
+    BaseUtils.fetchData(collectListUrl).then(data=>{
+        let parentElement = document.getElementById('mscAddCltList');
+        parentElement.innerHTML = '';
+        data.forEach(element=>{
+            let itemTextSpan = document.createElement('a');
+            itemTextSpan.text = element.name;
+            itemTextSpan.classList.add('clickable');
+            BaseUtils.setElementFocusClick(itemTextSpan);
+            bindStarMusic(itemTextSpan, element.id);
+
+            let itemElement = document.createElement('dd');
+            itemElement.classList.add('ctrlListItem');
+            itemElement.appendChild(itemTextSpan);
+            parentElement.appendChild(itemElement);
+        });
+        if (data.length > 0){
+            BaseUtils.displayModal('mscAddCltPopup');
+            let rect = document.getElementById('collectMusicBtn').getBoundingClientRect();
+            BaseUtils.adjustPopup('mscAddCltContent', this.getBoundingClientRect());
+            BaseUtils.hideModal('mscControlPopup');
+        }else{
+            BaseUtils.displayMessage("无合集，请先创建合集");  //显示错误信息弹窗
+            BaseUtils.hideModal('mscControlPopup');
+        }
+    });
+});
+
+document.getElementById('rmCollectMusicBtn').addEventListener('click', function(){
+    if(nowCollectId == null){
+        BaseUtils.displayMessage("默认合集无法移出");
+        BaseUtils.hideModal('mscControlPopup');
+        return;
+    }
+    let removeUrl = nowMusicRoute+'/'+nowControlId+'/remove_star';
+    BaseUtils.fetchWithConfig(removeUrl, {
+        method: 'PUT',
+        'headers': {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            collectId: nowCollectId
+        })
+    })
+    .then(data=>{
+        if (data.status == "Fail"){
+            BaseUtils.displayMessage(data.message);  //显示错误信息弹窗
+        }
+        else{
+            BaseUtils.displayMessage(data.message, 1000, 'green');  //显示新增成功信息弹窗
+            updateMscList(function(){
+                if (nowControlId == nowMusicId){
+                    document.getElementById('skipForwardBtn').click();
+                }
+            });
+        }
+    });
+    BaseUtils.hideModal('mscControlPopup');
+});
+
 window.onload = function(){
     BaseUtils.resizeFullScreen('bodyContainer');
 };
@@ -723,4 +810,5 @@ document.addEventListener('click', function(event){
     BaseUtils.checkClickModalPopup(event, 'addCollectPopup', 'addCollectContent');
     BaseUtils.checkClickModalPopup(event, 'cfmDelPcPopup', 'cfmDelPcContent');
     BaseUtils.checkClickModalPopup(event, 'editCollectPopup', 'editCollectContent');
+    BaseUtils.checkClickModalPopup(event, 'mscAddCltPopup', 'mscAddCltContent');
 });
