@@ -20,6 +20,7 @@ var nowControlId = null;  //当前操作的音乐文件ID
 var nowCollectId = null;  //当前播放的音乐合集,null表示全部合集
 var nowCtrlCollectId = null;  //当前编辑/删除的音乐合集
 
+var isProgressFocus = false;  //表示当前用户是否在拖动进度条
 
 function onPlayError(error){
     ModalUtils.displayFailMessage("播放错误");
@@ -54,7 +55,7 @@ function onPlayMusic(){
     /*音乐播放进度监听*/
     var updatedRaf = null;
     const onAnimationFrame = function(){
-        if (nowHowler !== null & nowHowler.playing()){
+        if (nowHowler !== null && nowHowler.playing() && !isProgressFocus){
             const width = (nowHowler.seek() / nowHowler.duration()) * 100;
             document.getElementById('musicProgress').value = width;
 
@@ -796,6 +797,23 @@ document.getElementById('rmCollectMusicBtn').addEventListener('click', function(
         }
     });
     ModalUtils.hideModal('mscControlPopup');
+});
+
+document.getElementById('musicProgress').addEventListener('mousedown', function(){
+    isProgressFocus = true;
+});
+
+document.getElementById('musicProgress').addEventListener('mouseup', function(){
+    if (nowMusicId !== null && nowHowler){
+        let fullTime = nowHowler.duration();
+        let willSetTime = Math.ceil(fullTime*this.value/100);
+        nowHowler.seek(willSetTime);
+        document.getElementById('nowPlayTime').text = DataUtils.formatToMinuteTime(willSetTime);
+    }else{
+        this.value = 0;
+    }
+    isProgressFocus = false;
+    onPlayMusic();
 });
 
 window.onload = function(){

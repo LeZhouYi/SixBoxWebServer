@@ -5,6 +5,7 @@ from .bookmark import BookmarkBp
 from .home import HomeBp
 from .notebook import NotebookBp
 from .music_player import MusicPlayerBp
+from .movie_player import MoviePlayerBp
 
 
 def register_blueprints(app: flask.Flask):
@@ -14,3 +15,4 @@ def register_blueprints(app: flask.Flask):
     app.register_blueprint(BackupBp)
     app.register_blueprint(NotebookBp)
     app.register_blueprint(MusicPlayerBp)
+    app.register_blueprint(MoviePlayerBp)
