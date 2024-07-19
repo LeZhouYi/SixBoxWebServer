@@ -1,4 +1,8 @@
-import * as BaseUtils from './base_utils.js';
+import * as DataUtils from './util/data_utils.js';
+import * as ModalUtils from './util/modal_utils.js';
+import * as FetchUtils from './util/fetch_utils.js';
+import * as PageUtils from './util/page_utils.js';
+import * as FuncUtils from './util/func_utils.js';
 
 const nowRoute = "/notebook";
 const rootParentId = "1";  //  根目录ID
@@ -12,7 +16,7 @@ function addLastPageItem(parentId, parent) {
     /*获取当前目录的上级目录，并构造上一页入口 */
     if (parentId !== rootParentId) {
         let getParentUrl = nowRoute + "/" + parentId;
-        BaseUtils.fetchData(getParentUrl).then(data => {
+        FetchUtils.fetchData(getParentUrl).then(data => {
             let backIcon = document.createElement('img');  // 操作图标
             backIcon.src = "static/images/icons/corner_up_left.png";  //设置来源
             backIcon.alt = "返回";
@@ -36,32 +40,32 @@ function bindControlBtnClick(element, nbId) {
     /*绑定笔记更多控制按钮的点击事件*/
     element.addEventListener('click', function (event) {
         nowControlId = nbId;
-        BaseUtils.displayElement('nbControlPopup');
+        ModalUtils.displayElement('nbControlPopup');
         document.getElementById('editNbBtn').focus();
 
         /*调整元素位置*/
         let element = document.getElementById('nbControlContent');
-        BaseUtils.adjustPopup('nbControlContent', event.target.getBoundingClientRect());
+        ModalUtils.adjustPopup('nbControlContent', event.target.getBoundingClientRect());
     });
 }
 
 function displayNoteBook(){
     /*显示笔记详情弹窗*/
     if (nowControlId == null) {
-        BaseUtils.displayMessage('笔记不存在');
+        ModalUtils.displayFailMessage('笔记不存在');
         return;
     }
     let nbDetailUrl = nowRoute + '/' + nowControlId;
-    BaseUtils.fetchWithConfig(nbDetailUrl).then(data => {
+    FetchUtils.fetchWithConfig(nbDetailUrl).then(data => {
         if (data.status != undefined) {
-            BaseUtils.displayMessage(data.message);
+            ModalUtils.displayFailMessage(data.message);
         } else {
             document.getElementById('displayNbName').value = data.name;  //笔记名称
             if (data.content !== null) {
                 let mceEditor = tinymce.get('displayNbTinyMce');
                 mceEditor.setContent(data.content);
             }
-            BaseUtils.displayModal('readNbPopup');  //显示编辑弹窗
+            ModalUtils.displayModal('readNbPopup');  //显示编辑弹窗
             tinymce.get('displayNbTinyMce').focus();
         }
     });
@@ -79,7 +83,7 @@ function addNbListItem(data, parent) {
             nowControlId = data.id;
             displayNoteBook();
         });
-        BaseUtils.setElementFocusClick(nameSpan);
+        PageUtils.setElementFocusClick(nameSpan);
         preIcon.src = "static/images/icons/file_text.png";  //设置来源
         preIcon.alt = "笔记";
     } else if (data.type == nbTypeEnum.FOLDER) {
@@ -93,7 +97,7 @@ function addNbListItem(data, parent) {
     controlIcon.src = "static/images/icons/more_vertical.png";
     controlIcon.alt = "操作";
     controlIcon.classList.add('bmIcon', 'clickable');
-    BaseUtils.setElementFocusClick(controlIcon);
+    PageUtils.setElementFocusClick(controlIcon);
     bindControlBtnClick(controlIcon, data.id);  // 绑定点击事件
 
     let lineItem = document.createElement('dd');
@@ -108,14 +112,14 @@ function addNbListItem(data, parent) {
 function updateNbList() {
     /* 请求/notebook接口并刷新当前页面的笔记列表内容 */
     let currentUrl = window.location.href;
-    let parentId = BaseUtils.getUrlParams(currentUrl, 'parentId'); // 获取参数parentId
+    let parentId = FetchUtils.getUrlParams(currentUrl, 'parentId'); // 获取参数parentId
     let getListUrl = nowRoute + "?parentId=" + parentId;  //构造url
 
     let dataList = document.getElementById('nbList')
     dataList.innerHTML = '';  // 清空表格内容
 
     addLastPageItem(parentId, dataList); //添加上一页
-    BaseUtils.fetchData(getListUrl).then(data => {
+    FetchUtils.fetchData(getListUrl).then(data => {
         data.forEach(element => {
             addNbListItem(element, dataList);
         });
@@ -132,17 +136,17 @@ function clearAddNbInput() {
 function createNbFolderOption(selectId) {
     /*创建笔记文件夹选项*/
     let currentUrl = window.location.href;
-    let parentId = BaseUtils.getUrlParams(currentUrl, 'parentId'); // 获取参数parentId
+    let parentId = FetchUtils.getUrlParams(currentUrl, 'parentId'); // 获取参数parentId
     let getBmFolderUrl = nowRoute + "?type=2&parentId=" + parentId;
 
     //请求并获取当前目录下的所有目录，并用于构造选项
-    BaseUtils.fetchData(getBmFolderUrl).then(data => {
+    FetchUtils.fetchData(getBmFolderUrl).then(data => {
         let addNbFolderSelect = document.getElementById(selectId);
         addNbFolderSelect.innerHTML = ''; // 清空目录下拉列表
-        addNbFolderSelect.appendChild(BaseUtils.createOption(parentId, '当前目录'));
+        addNbFolderSelect.appendChild(PageUtils.createOption(parentId, '当前目录'));
         data.forEach(dataItem => {
             if (dataItem.id !== nowControlId) {
-                let option = BaseUtils.createOption(dataItem.id, dataItem.name);
+                let option = PageUtils.createOption(dataItem.id, dataItem.name);
                 addNbFolderSelect.appendChild(option);
             }
         })
@@ -205,13 +209,13 @@ tinymce.init({
 
 document.getElementById('addCancelBtn').addEventListener('click', function () {
     /*点击新增笔记的取消按钮*/
-    BaseUtils.hideModal('addNbPopup');
+    ModalUtils.hideModal('addNbPopup');
     clearAddNbInput();
 });
 
 document.getElementById('addNbButton').addEventListener('click', function () {
     /*点击新增笔记按钮*/
-    BaseUtils.displayModal('addNbPopup');
+    ModalUtils.displayModal('addNbPopup');
     document.getElementById('addNbName').focus();
     createNbFolderOption('addNbFolderSelect');
 });
@@ -220,10 +224,10 @@ document.getElementById('addNbTypeSelect').addEventListener('change', function (
     /*根据值不同，控制url控件是否显示*/
     let selectValue = this.value;
     if (selectValue == nbTypeEnum.NOTEBOOK) {
-        BaseUtils.displayElement('addNbMceContainer');
+        ModalUtils.displayElement('addNbMceContainer');
     }
     else if (selectValue == nbTypeEnum.FOLDER) {
-        BaseUtils.hideElement('addNbMceContainer');
+        ModalUtils.hideElement('addNbMceContainer');
     }
 });
 
@@ -234,7 +238,7 @@ document.getElementById('addConfirmBtn').addEventListener('click', function () {
     let nbSelectType = document.getElementById('addNbTypeSelect');
     let nbMceEditor = tinymce.get('addNbTinyMce');
 
-    BaseUtils.fetchWithConfig(nowRoute, {
+    FetchUtils.fetchWithConfig(nowRoute, {
         method: "POST",
         "headers": {
             'Content-Type': 'application/json'
@@ -248,27 +252,27 @@ document.getElementById('addConfirmBtn').addEventListener('click', function () {
     })
         .then(data => {
             if (data.status == "Fail") {
-                BaseUtils.displayMessage(data.message);  //显示错误信息弹窗
+                ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
             }
             else {
-                BaseUtils.displayMessage(data.message, 1000, 'green');  //显示新增成功信息弹窗
+                ModalUtils.displaySuccessMessage(data.message);  //显示新增成功信息弹窗
                 updateNbList();  //更新当前笔记列表
                 clearAddNbInput();  //清空输入
-                BaseUtils.hideModal('addNbPopup');
+                ModalUtils.hideModal('addNbPopup');
             }
         });
 });
 
 document.getElementById('deleteNbBtn').addEventListener('click', function () {
     /*点击删除笔记按钮*/
-    BaseUtils.hideElement('nbControlPopup');
-    BaseUtils.displayModal('cfmDelPopup');
+    ModalUtils.hideElement('nbControlPopup');
+    ModalUtils.displayModal('cfmDelPopup');
     document.getElementById('confirmDelBtn').focus();
 });
 
 document.getElementById('cancelDelBtn').addEventListener('click', function () {
     /*点击取消删除笔记*/
-    BaseUtils.hideModal('cfmDelPopup');
+    ModalUtils.hideModal('cfmDelPopup');
 });
 
 document.getElementById('confirmDelBtn').addEventListener('click', function () {
@@ -277,15 +281,15 @@ document.getElementById('confirmDelBtn').addEventListener('click', function () {
         return;
     }
     let delBmUrl = nowRoute + "/" + nowControlId;
-    BaseUtils.fetchWithConfig(delBmUrl, {
+    FetchUtils.fetchWithConfig(delBmUrl, {
         method: "DELETE"
     })
         .then(data => {
             if (data.status == 'Fail') {
-                BaseUtils.displayMessage(data.message);  //显示错误信息弹窗
+                ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
             } else {
-                BaseUtils.displayMessage(data.message, 1000, 'green');  //显示新增成功信息弹窗
-                BaseUtils.hideModal('cfmDelPopup');
+                ModalUtils.displaySuccessMessage(data.message);  //显示新增成功信息弹窗
+                ModalUtils.hideModal('cfmDelPopup');
                 updateNbList();  //更新当前笔记列表
             }
         });
@@ -293,41 +297,41 @@ document.getElementById('confirmDelBtn').addEventListener('click', function () {
 
 document.getElementById('editCancelBtn').addEventListener('click', function () {
     /*点击取消编辑*/
-    BaseUtils.hideModal('editNbPopup');
+    ModalUtils.hideModal('editNbPopup');
 });
 
 document.getElementById('editNbBtn').addEventListener('click', function () {
     /*点击编辑笔记*/
-    BaseUtils.hideElement('nbControlPopup');
+    ModalUtils.hideElement('nbControlPopup');
     if (nowControlId == null) {
-        BaseUtils.displayMessage('笔记不存在');
+        ModalUtils.displayFailMessage('笔记不存在');
         return;
     }
     createNbFolderOption('editNbFolderSelect');
     document.getElementById('editNbFolderSelect').disabled = true;
 
     let nbDetailUrl = nowRoute + '/' + nowControlId;
-    BaseUtils.fetchWithConfig(nbDetailUrl).then(data => {
+    FetchUtils.fetchWithConfig(nbDetailUrl).then(data => {
         if (data.status != undefined) {
-            BaseUtils.displayMessage(data.message);
+            ModalUtils.displayFailMessage(data.message);
         } else {
             document.getElementById('editNbName').value = data.name;  //笔记名称
 
             let selectValue = data.type;
-            BaseUtils.setSelectedByValue('editNbTypeSelect', selectValue); // 设置笔记类型
+            PageUtils.setSelectedByValue('editNbTypeSelect', selectValue); // 设置笔记类型
             document.getElementById('editNbTypeSelect').disabled = true;
             if (selectValue == nbTypeEnum.NOTEBOOK) {
-                BaseUtils.displayElement('editNbMceContainer');
+                ModalUtils.displayElement('editNbMceContainer');
             }
             else if (selectValue == nbTypeEnum.FOLDER) {
-                BaseUtils.hideElement('editNbMceContainer');
+                ModalUtils.hideElement('editNbMceContainer');
             }
 
             if (data.content !== null) {
                 let mceEditor = tinymce.get('editNbTinyMce');
                 mceEditor.setContent(data.content);
             }
-            BaseUtils.displayModal('editNbPopup');  //显示编辑弹窗
+            ModalUtils.displayModal('editNbPopup');  //显示编辑弹窗
             document.getElementById('editNbName').focus();
         }
     });
@@ -336,7 +340,7 @@ document.getElementById('editNbBtn').addEventListener('click', function () {
 document.getElementById('editConfirmBtn').addEventListener('click', function () {
     /*点击确认编辑笔记*/
     if (nowControlId == null) {
-        BaseUtils.displayMessage('笔记不存在');
+        ModalUtils.displayFailMessage('笔记不存在');
         return;
     }
     let editNbUrl = nowRoute + '/' + nowControlId;
@@ -344,7 +348,7 @@ document.getElementById('editConfirmBtn').addEventListener('click', function () 
     let nbFolderSelect = document.getElementById('editNbFolderSelect');  //所属目录
     let nbType = document.getElementById('editNbTypeSelect');  //书签类型
     let mceEditor = tinymce.get('editNbTinyMce');
-    BaseUtils.fetchWithConfig(editNbUrl, {
+    FetchUtils.fetchWithConfig(editNbUrl, {
         method: "PUT",
         "headers": {
             'Content-Type': 'application/json'
@@ -358,10 +362,10 @@ document.getElementById('editConfirmBtn').addEventListener('click', function () 
     })
         .then(data => {
             if (data.status == 'Fail') {
-                BaseUtils.displayMessage(data.message);  //显示错误信息弹窗
+                ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
             } else {
-                BaseUtils.displayMessage(data.message, 1000, 'green');  //显示新增成功信息弹窗
-                BaseUtils.hideModal('editNbPopup');
+                ModalUtils.displaySuccessMessage(data.message);  //显示新增成功信息弹窗
+                ModalUtils.hideModal('editNbPopup');
                 updateNbList();  //更新当前书签列表
             }
         });
@@ -377,7 +381,7 @@ document.getElementById('searchNbButton').addEventListener('click', function(){
         let dataList = document.getElementById('nbList')
         dataList.innerHTML = '';  // 清空表格内容
 
-        BaseUtils.fetchData(searchUrl).then(data=>{
+        FetchUtils.fetchData(searchUrl).then(data=>{
             data.forEach(element=>{
                 addNbListItem(element, dataList);
             });
@@ -394,25 +398,25 @@ document.getElementById('searchNbInput').addEventListener('keydown', function(){
 
 document.addEventListener('keydown', function(event){
     /*监听Esc并退出弹窗*/
-    BaseUtils.escCloseModal(event, 'addNbPopup', 'nbControlPopup', 'cfmDelPopup', 'editNbPopup', 'readNbPopup');
+    ModalUtils.escCloseModal(event, 'addNbPopup', 'nbControlPopup', 'cfmDelPopup', 'editNbPopup', 'readNbPopup');
 });
 
 window.onload = function(){
-    BaseUtils.resizeFullScreen('bodyContainer');
-    BaseUtils.setFocusClick('searchNbButton', 'addNbButton', 'addConfirmBtn', 'addCancelBtn');
-    BaseUtils.setFocusClick('editNbBtn', 'deleteNbBtn', 'editConfirmBtn', 'editCancelBtn');
-    BaseUtils.setFocusClick('confirmDelBtn', 'cancelDelBtn');
+    PageUtils.resizeFullScreen('bodyContainer');
+    PageUtils.setFocusClick('searchNbButton', 'addNbButton', 'addConfirmBtn', 'addCancelBtn');
+    PageUtils.setFocusClick('editNbBtn', 'deleteNbBtn', 'editConfirmBtn', 'editCancelBtn');
+    PageUtils.setFocusClick('confirmDelBtn', 'cancelDelBtn');
 };
 
 document.addEventListener('click', function(event){
     /*监听文档点击事件，检查点击是否在弹窗外部*/
-    BaseUtils.checkClickModalPopup(event, 'readNbPopup', 'readNbContent');
-    BaseUtils.checkClickModalPopup(event, 'addNbPopup', 'addNbContent');
-    BaseUtils.checkClickModalPopup(event, 'nbControlPopup', 'nbControlContent');
-    BaseUtils.checkClickModalPopup(event, 'cfmDelPopup', 'cfmDelContent');
-    BaseUtils.checkClickModalPopup(event, 'editNbPopup', 'editNbContent');
+    ModalUtils.checkClickModalPopup(event, 'readNbPopup', 'readNbContent');
+    ModalUtils.checkClickModalPopup(event, 'addNbPopup', 'addNbContent');
+    ModalUtils.checkClickModalPopup(event, 'nbControlPopup', 'nbControlContent');
+    ModalUtils.checkClickModalPopup(event, 'cfmDelPopup', 'cfmDelContent');
+    ModalUtils.checkClickModalPopup(event, 'editNbPopup', 'editNbContent');
 });
 
-window.addEventListener('resize', BaseUtils.throttle(function(){
-    BaseUtils.resizeFullScreen('bodyContainer');
+window.addEventListener('resize', FuncUtils.throttle(function(){
+    PageUtils.resizeFullScreen('bodyContainer');
 }), 200);

@@ -1,4 +1,5 @@
-import * as BaseUtils from './base_utils.js';
+import * as PageUtils from './util/page_utils.js';
+import * as FuncUtils from './util/func_utils.js';
 
 function registerClick(...parentIds){
     /*注册点击事件*/
@@ -11,11 +12,11 @@ function registerClick(...parentIds){
 }
 
 window.onload = function(){
-    BaseUtils.resizeFullScreen('bodyContainer');
-    BaseUtils.setFocusClick('appBookmark', 'appNotebook', 'appMusicPlayer', 'appBackup');
+    PageUtils.resizeFullScreen('bodyContainer');
+    PageUtils.setFocusClick('appBookmark', 'appNotebook', 'appMusicPlayer', 'appBackup');
     registerClick('appBookmark', 'appBackup', 'appNotebook', 'appMusicPlayer');
 };
 
-window.addEventListener('resize', BaseUtils.throttle(function(){
-    BaseUtils.resizeFullScreen('bodyContainer');
+window.addEventListener('resize', FuncUtils.throttle(function(){
+    PageUtils.resizeFullScreen('bodyContainer');
 }), 200);

@@ -1,14 +1,17 @@
-import * as BaseUtils from './base_utils.js';
+import * as ModalUtils from './util/modal_utils.js';
+import * as FetchUtils from './util/fetch_utils.js';
+import * as PageUtils from './util/page_utils.js';
+import * as FuncUtils from './util/func_utils.js';
 
 const nowRoute = "/backup"
 
 document.getElementById('appDownData').addEventListener('click', function(){
     let downDataUrl = nowRoute
-    if (BaseUtils.fetchFile(downDataUrl)){
-        BaseUtils.displayMessage('正在下载', 1000, 'green');
+    if (FetchUtils.fetchFile(downDataUrl)){
+        ModalUtils.displaySuccessMessage('正在下载');
     }
     else{
-        BaseUtils.displayMessage('下载失败');
+        ModalUtils.displayFailMessage('下载失败');
     }
 });
 
@@ -19,26 +22,26 @@ document.getElementById('uploadFileField').addEventListener('change', function()
         let formData = new FormData();
         formData.append('file', file);
         formData.append('name', file.name)
-        BaseUtils.fetchWithConfig(uploadUrl, {
+        FetchUtils.fetchWithConfig(uploadUrl, {
             method: "POST",
             body: formData
         })
         .then(data=>{
             if (data.status == "Fail"){
-                BaseUtils.displayMessage(data.message);  //显示错误信息弹窗
+                ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
             }
             else{
-                BaseUtils.displayMessage(data.message, 1000, 'green');  //显示新增成功信息弹窗
+                ModalUtils.displaySuccessMessage(data.message);  //显示新增成功信息弹窗
             }
         });
     }
 });
 
 window.onload = function(){
-    BaseUtils.resizeFullScreen('bodyContainer');
-    BaseUtils.setFocusClick('appDownData', 'appUploadData');
+    PageUtils.resizeFullScreen('bodyContainer');
+    PageUtils.setFocusClick('appDownData', 'appUploadData');
 };
 
-window.addEventListener('resize', BaseUtils.throttle(function(){
-    BaseUtils.resizeFullScreen('bodyContainer');
+window.addEventListener('resize', FuncUtils.throttle(function(){
+    PageUtils.resizeFullScreen('bodyContainer');
 }), 200);
