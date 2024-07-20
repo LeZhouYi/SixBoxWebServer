@@ -527,13 +527,11 @@ document.getElementById('downloadMscBtn').addEventListener('click', function(){
         return;
     }
     let musicUrl = nowMusicRoute+"/"+nowControlId+'/file';
-    if (FetchUtils.fetchFile(musicUrl)){
-        ModalUtils.displaySuccessMessage('正在下载');
-        ModalUtils.hideModal('mscControlPopup');
-    }
-    else{
-        ModalUtils.displayFailMessage('下载失败');
-    }
+    const a = document.createElement('a');
+    a.href = musicUrl;
+    document.body.appendChild(a);
+    a.click();
+    ModalUtils.hideModal('mscControlPopup');
 });
 
 document.getElementById('skipBackBtn').addEventListener('click', function(){

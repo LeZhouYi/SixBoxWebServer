@@ -55,7 +55,7 @@ def get_music_file(music_id: str):
             data = MscDB.get(MscQuery.id == music_id)
             music_path = os.path.join(os.getcwd(), data["path"])
             download_name = "%s-%s.mp3" % (data["artist"], data["name"])
-        download_name = route_utils.rfc5987_encode(download_name)
+        # download_name = route_utils.rfc5987_encode(download_name)
         return send_file(music_path, as_attachment=True, download_name=download_name)
     except KeyError:
         return route_utils.gen_fail_response(RepoInfo["001"])
