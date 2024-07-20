@@ -41,9 +41,9 @@ RepoInfo = {
 }
 
 
-@MusicPlayerBp.route("/musicplayer.html")
+@MusicPlayerBp.route("/music_player.html")
 def backup_page():
-    return render_template("musicplayer.html")
+    return render_template("music_player.html")
 
 
 @MusicPlayerBp.route("/music/<music_id>/file", methods=["GET"])

@@ -96,6 +96,10 @@ function loadPlayMusic(){
         nowHowler.unload();
     }
     FetchUtils.fetchBlob(musicUrl).then(blob=>{
+        if (!blob){
+            ModalUtils.displayFailMessage("网络问题，加载音乐失败");
+            return;
+        }
         var nowMusicBlob = URL.createObjectURL(blob);
         nowHowler = new Howl({
             src: [nowMusicBlob], // 使用 Blob URL 作为音频源
@@ -109,7 +113,7 @@ function loadPlayMusic(){
         playMusic();
         let musicInfo = nowMusicList[findNowIndex()];
         document.getElementById('nowPlayMusicText').text = '> 正在播放: '+musicInfo.artist + '-' + musicInfo.name;
-    });
+    })
 }
 
 function bindMscClickLoad(musicId){

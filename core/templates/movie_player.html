@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六号盒子</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}"/>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='js/videojs/video-js.css')}}"/>
+</head>
+<body>
+<div id="bodyContainer" class="bodyContainer">
+    <div class="bodyContent contentContainer">
+        <div class="header paddingExtra">
+            <img src="static/images/icons/inbox.png" class="headerIcon">
+            <a class="headerText">DVD</a>
+        </div>
+        <div class="pathBar paddingExtra">
+            <a class="pathBarText" href="/home.html">首页</a><a class="pathBarText">&gt;DVD</a>
+        </div>
+        <div class="mpContent paddingExtra">
+            <video id="videoContainer" class="video-js" controls preload="auto" width="640" height="264">
+            </video>
+            <dl id="mpList" class="bmList">
+            </dl>
+        </div>
+    </div>
+</div>
+<div id="messagePopup" class="messagePopup hidden">
+    <div id="messageContent" class="messageContent"></div>
+</div>
+<script src="{{url_for('static', filename='js/videojs/video.js')}}"></script>
+<script type="module" src="{{url_for('static', filename='js/sixbox/movie_player.js')}}"></script>
+</body>
+</html>

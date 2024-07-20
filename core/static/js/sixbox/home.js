@@ -14,7 +14,7 @@ function registerClick(...parentIds){
 window.onload = function(){
     PageUtils.resizeFullScreen('bodyContainer');
     PageUtils.setFocusClick('appBookmark', 'appNotebook', 'appMusicPlayer', 'appBackup');
-    registerClick('appBookmark', 'appBackup', 'appNotebook', 'appMusicPlayer');
+    registerClick('appBookmark', 'appBackup', 'appNotebook', 'appMusicPlayer', 'appMoviePlayer');
 };
 
 window.addEventListener('resize', FuncUtils.throttle(function(){
