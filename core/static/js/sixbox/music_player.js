@@ -9,6 +9,7 @@ const playMode = {
     "RANDOM": 2  // 随机循环播放
 }
 const nowMusicRoute = '/music';  //音乐文件路由
+var nowMusicBlob = null;
 var nowHowler = null;  // howler实例
 var nowMusicId = null;  // 现时播放的音乐ID
 var nowPlayVolume = 0.5;  //音量
@@ -100,7 +101,11 @@ function loadPlayMusic(){
             ModalUtils.displayFailMessage("网络问题，加载音乐失败");
             return;
         }
-        var nowMusicBlob = URL.createObjectURL(blob);
+        if (nowMusicBlob){
+            URL.revokeObjectURL(nowMusicBlob);
+            nowMusicBlob = null;
+        }
+        nowMusicBlob = URL.createObjectURL(blob);
         nowHowler = new Howl({
             src: [nowMusicBlob], // 使用 Blob URL 作为音频源
             format: ['mp3'], // 指定音频格式
@@ -245,7 +250,6 @@ function bindCollectEdit(parentElement, collectId){
 }
 
 function bindStarMusic(parentElement, collectId){
-    nowCtrlCollectId = collectId;
     parentElement.addEventListener('click', function(){
         let detailUrl = nowMusicRoute + '/' + nowControlId+ "/star";
         FetchUtils.fetchWithConfig(detailUrl,{
@@ -254,7 +258,7 @@ function bindStarMusic(parentElement, collectId){
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                collectId: nowCtrlCollectId
+                collectId: collectId
             })
         })
         .then(data => {
