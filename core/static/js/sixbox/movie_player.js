@@ -72,7 +72,7 @@ function addMvListItem(data, parent){
 
 function updateMvList(){
     /*更新视频列表*/
-    PageUtils.clearElementByStart('mpList', 1);
+    PageUtils.clearElementByStart('mvList', 1);
     let parentElement = document.getElementById('mvList');
 
     let searchUrl = nowRoute;
