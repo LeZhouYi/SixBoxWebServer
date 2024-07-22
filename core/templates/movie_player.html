@@ -11,20 +11,65 @@
 <div id="bodyContainer" class="bodyContainer">
     <div class="bodyContent contentContainer">
         <div class="header paddingExtra">
-            <img src="static/images/icons/inbox.png" class="headerIcon">
+            <img src="static/images/icons/tv.png" class="headerIcon">
             <a class="headerText">DVD</a>
         </div>
         <div class="pathBar paddingExtra">
             <a class="pathBarText" href="/home.html">首页</a><a class="pathBarText">&gt;DVD</a>
         </div>
-        <div id="bmList" class="bmList marginExtra">
-            <video id="videoContainer" class="video-js videoItem" controls preload="auto">
+        <div class="videoContainer">
+            <video id="videoContent" class="video-js videoItem marginExtra" controls preload="auto">
             </video>
         </div>
+        <dl id="mvList" class="bmList marginExtra">
+            <dd class="musicCtrlBar">
+                <div class="searchBar rightExtra">
+                    <input id="searchMvInput" class="searchInput" placeholder="输入文本搜索">
+                    <div id="searchMvButton" class="searchButton clickable">
+                        <a>搜索</a>
+                    </div>
+                </div>
+                <div id="uploadMvButton" class="controlButton clickable">
+                    <a>上传视频</a>
+                </div>
+                <img id="mvMoreCtrlBtn" src="static/images/icons/more_vertical.png" class="musicCtrlIcon">
+            </dd>
+        </dl>
     </div>
 </div>
 <div id="messagePopup" class="messagePopup hidden">
     <div id="messageContent" class="messageContent"></div>
+</div>
+<div id="addMvPopup" class="popupOverlay hidden">
+    <div id="addMvContent" class="popupContent">
+        <div class="popupHeader">
+            <a class="headerText">上传视频</a>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">名称：</label>
+                <input type="text" id="addMvName" placeholder="请输入名称"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputFileField">
+                <label class="bmInputLabel">视频：</label>
+                <input type="file" id="addMvFile" placeholder="请选择视频文件" class="clickable hidden" accept="video/mp4"/>
+                <label for="addMvFile" class="controlButton clickable">选择文件</label>
+                <input type="text" id="addMvFileText" placeholder="请选择视频文件" disabled>
+            </div>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer gapDefault">
+            <div id="addMvCfmBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="addMvCclBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="{{url_for('static', filename='js/videojs/video.js')}}"></script>
 <script type="module" src="{{url_for('static', filename='js/sixbox/movie_player.js')}}"></script>

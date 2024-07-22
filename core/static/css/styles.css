@@ -55,7 +55,7 @@
         --extra-margin: 0px;
         --input-inline-padding: 10px;  /*输入框间距*/
         --extra-span: 0px;
-        --video-item-height: 200px;
+        --video-item-height: 250px;
     }
 }
 /*--------------默认类--------------*/
@@ -709,9 +709,17 @@ body, html {
     display: grid;
 }
 
+.videoContainer{
+    height: var(--video-item-height);
+    width: calc(100% - var(--extra-margin));
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
 .videoItem{
     width: 100%;
-    height: var(--video-item-height);
+    height: 100%;
+    border-radius: 5px;
 }
 
 @media (min-device-width: 601px){

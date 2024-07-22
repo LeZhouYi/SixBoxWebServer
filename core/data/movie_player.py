@@ -1,3 +1,4 @@
+import copy
 import threading
 import time
 from random import Random
@@ -29,3 +30,19 @@ class MovieServer:
             data = data_utils.extra_data(data, key_list)
             data["id"] = "%s%s" % (int(time.time()), str(self.rand.randint(100, 999)))
             self.db.insert(data)
+
+    def get_list(self, keys: list, extra_data: list = None):
+        """
+        只返回特定字段的所有数据的列表
+        """
+        with self.thread_lock:
+            return_data = []
+            if extra_data is None:
+                extra_data = self.db.all()
+            for data in extra_data:
+                return_item = {}
+                for key in keys:
+                    if key in data:
+                        return_item[key] = data[key]
+                return_data.append(copy.deepcopy(return_item))
+            return return_data

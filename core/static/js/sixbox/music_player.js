@@ -121,12 +121,6 @@ function loadPlayMusic(){
     })
 }
 
-function bindMscClickLoad(musicId){
-    /*根据music id 播放音乐*/
-    nowMusicId = musicId;
-    loadPlayMusic();
-}
-
 function bindControlBtnClick(button, controlId){
     /*绑定点击操作按钮事件*/
     button.addEventListener('click', function(event){
@@ -143,7 +137,8 @@ function addMscListItem(data, parent){
     let nameSpan = document.createElement('a');
     nameSpan.textContent = data.artist + '-' + data.name;  // 书签名称
     nameSpan.addEventListener('click', function(){
-        bindMscClickLoad(data.id);
+            nowMusicId = data.id;
+            loadPlayMusic();
     });
 
     let preIcon = document.createElement('img');  //前置图标
@@ -358,11 +353,6 @@ document.getElementById('addMscCfmBtn').addEventListener('click', function(){
             updateMscList();
         }
     });
-});
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    /*页面首次加载，刷新当前书签列表*/
-    updateMscList();
 });
 
 document.getElementById('musicVolumeBtn').addEventListener('click', function(){
@@ -823,6 +813,7 @@ document.getElementById('musicProgress').addEventListener('mouseup', function(){
 });
 
 window.onload = function(){
+    updateMscList();
     PageUtils.resizeFullScreen('bodyContainer');
 };
 

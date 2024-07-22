@@ -114,10 +114,8 @@ def add_music():
             "path": str(filepath)
         }
         MscServer.add_data(data)
-    elif not file:
-        return route_utils.gen_fail_response(RepoInfo["005"])
     else:
-        return route_utils.gen_fail_response(RepoInfo["006"])
+        return route_utils.gen_fail_response(RepoInfo["005"])
     return route_utils.gen_success_response(RepoInfo["007"])
 
 
