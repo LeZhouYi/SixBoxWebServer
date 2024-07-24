@@ -4,21 +4,24 @@ import * as ModalUtils from './util/modal_utils.js';
 import * as FuncUtils from './util/func_utils.js';
 
 const nowRoute = '/movie';
+var moviePlayer = null;
 var nowMovieBlob = null;
 var nowPlayId = null;
+var nowControlId = null;
 
 function playMovie(){
-    console.log("test");
     if(!nowPlayId){
-        ModalUtils.displayFailMessage("未有选择视频");
+        ModalUtils.displayFailMessage('未有选择视频');
+        return;
     }
-    var player = videojs('#videoContent');
+    ModalUtils.displayModal('videoContainer');
+    moviePlayer = videojs('#videoContent');
     var source = document.createElement('source');
 
-    let videoUrl = nowRoute + '/' + nowPlayId;
+    let videoUrl = nowRoute + '/file/' + nowPlayId;
     FetchUtils.fetchBlob(videoUrl).then(blob=>{
         if (!blob){
-            ModalUtils.displayFailMessage("网络问题，加载音乐失败");
+            ModalUtils.displayFailMessage('网络问题，加载音乐失败');
             return;
         }
         if (nowMovieBlob){
@@ -26,13 +29,13 @@ function playMovie(){
             nowMovieBlob = null;
         }
         nowMovieBlob = URL.createObjectURL(blob);
-        player.src({
+        moviePlayer.src({
             type: 'video/mp4',
             src: nowMovieBlob
         })
-        player.load();
-        player.play();
-        player.on('dispose', function(){
+        moviePlayer.load();
+        moviePlayer.play();
+        moviePlayer.on('dispose', function(){
             if (nowMovieBlob){
                 URL.revokeObjectURL(nowMovieBlob);
                 nowMovieBlob = null;
@@ -52,14 +55,18 @@ function addMvListItem(data, parent){
 
     let preIcon = document.createElement('img');  //前置图标
     preIcon.classList.add('bmIcon');
-    preIcon.src = "static/images/icons/tv.png";  //设置来源
-    preIcon.alt = "音乐";
+    preIcon.src = 'static/images/icons/tv.png';  //设置来源
+    preIcon.alt = '音乐';
 
     let controlIcon = document.createElement('img');  // 操作图标
-    controlIcon.src = "static/images/icons/more_vertical.png";
-    controlIcon.alt = "操作";
+    controlIcon.src = 'static/images/icons/more_vertical.png';
+    controlIcon.alt = '操作';
     controlIcon.classList.add('bmIcon', 'clickable');
-//    bindControlBtnClick(controlIcon, data.id);  // 绑定点击事件
+    controlIcon.addEventListener('click', function(event){
+        nowControlId = data.id;
+        ModalUtils.displayModal('mvControlPopup');
+        ModalUtils.adjustPopup('mvControlContent', event.target.getBoundingClientRect());
+    });
 
     let lineItem = document.createElement('dd');
     lineItem.classList.add('bmItem', 'clickable');
@@ -76,12 +83,30 @@ function updateMvList(){
     let parentElement = document.getElementById('mvList');
 
     let searchUrl = nowRoute;
+    let searchInput = document.getElementById('searchMvInput');
+    if (searchInput.value!==''){
+        searchUrl += '?search='+searchInput.value;
+    }
     FetchUtils.fetchData(searchUrl).then(data=>{
         data.forEach(element=>{
             addMvListItem(element, parentElement);
         });
     });
 }
+
+document.getElementById('downloadMvBtn').addEventListener('click', function(){
+    if(!nowControlId){
+        ModalUtils.displayFailMessage('未有选择视频');
+        ModalUtils.hideModal('mvControlPopup');
+        return;
+    }
+    let videoUrl = nowRoute + '/file/' + nowControlId;
+    const a = document.createElement('a');
+    a.href = videoUrl;
+    document.body.appendChild(a);
+    a.click();
+    ModalUtils.hideModal('mvControlPopup');
+});
 
 document.getElementById('uploadMvButton').addEventListener('click', function(){
     ModalUtils.displayModal('addMvPopup');
@@ -111,7 +136,7 @@ document.getElementById('addMvFile').addEventListener('change', function(event){
 document.getElementById('addMvCfmBtn').addEventListener('click', function(){
     let mvFileName = document.getElementById('addMvFileText');
     if (mvFileName.value === ''){
-        ModalUtils.displayFailMessage("请选择视频文件");
+        ModalUtils.displayFailMessage('请选择视频文件');
         return;
     }
     let mvFilePath = document.getElementById('addMvFile');
@@ -120,15 +145,20 @@ document.getElementById('addMvCfmBtn').addEventListener('click', function(){
     formData.append('file', mvFilePath.files[0]);
     formData.append('name', mvName.value);
 
+    let cfmBtnText = this.children[0];
+    cfmBtnText.text = "上传中";
+
     FetchUtils.fetchWithConfig(nowRoute, {
-        method: "POST",
+        method: 'POST',
         body: formData
     })
     .then(data=>{
-        if (data.status == "Fail"){
+        if (data.status == 'Fail'){
             ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
+            cfmBtnText.text = "确认";
         }
         else{
+            cfmBtnText.text = "确认";
             ModalUtils.displaySuccessMessage(data.message);  //显示新增成功信息弹窗
             ModalUtils.hideModal('addMvPopup');
             document.getElementById('addMvName').value = '';
@@ -136,6 +166,85 @@ document.getElementById('addMvCfmBtn').addEventListener('click', function(){
             updateMvList();
         }
     });
+});
+
+document.getElementById('editMvBtn').addEventListener('click', function(){
+    ModalUtils.hideModal('mvControlPopup');
+    if(!nowControlId){
+        ModalUtils.displayFailMessage('未有选择视频');
+        return;
+    }
+    let detailUrl = nowRoute + '/' + nowControlId;
+    FetchUtils.fetchData(detailUrl).then(data=>{
+        if(data.status && data.status == 'Fail'){
+            ModalUtils.displayFailMessage(data.message);
+            return;
+        }
+        ModalUtils.displayModal('editMvPopup');
+        document.getElementById('editMvName').value = data.name;
+    });
+});
+
+document.getElementById('editMvCclBtn').addEventListener('click', function(){
+    ModalUtils.hideModal('editMvPopup');
+});
+
+document.getElementById('editMvCfmBtn').addEventListener('click', function(){
+    let editUrl = nowRoute + '/' + nowControlId;
+    let mvName = document.getElementById('editMvName');
+    FetchUtils.fetchWithConfig(editUrl, {
+        method: 'PUT',
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: mvName.value
+        })
+    })
+    .then(data=>{
+        if (data.status == 'Fail'){
+            ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
+        }
+        else{
+            ModalUtils.displaySuccessMessage(data.message);  //显示新增成功信息弹窗
+            updateMvList();  //更新当前书签列表
+            ModalUtils.hideModal('editMvPopup');
+        }
+    });
+});
+
+document.getElementById('delMvBtn').addEventListener('click', function(){
+    ModalUtils.displayModal('cfmDelPopup');
+    ModalUtils.hideModal('mvControlPopup');
+});
+
+document.getElementById('cancelDelBtn').addEventListener('click', function(){
+    ModalUtils.hideModal('cfmDelPopup');
+});
+
+document.getElementById('confirmDelBtn').addEventListener('click', function(){
+    ModalUtils.hideModal('cfmDelPopup');
+    let delUrl = nowRoute + '/' + nowControlId;
+    FetchUtils.fetchWithConfig(delUrl, {
+        method: 'DELETE'
+    })
+    .then(data=>{
+        if (data.status == 'Fail'){
+            ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
+        }
+        else{
+            ModalUtils.displaySuccessMessage(data.message);  //显示新增成功信息弹窗
+            updateMvList();  //更新当前书签列表
+            if (nowControlId == nowPlayId && moviePlayer){
+                moviePlayer.pause();
+                ModalUtils.hideElement('videoContainer');
+            }
+        }
+    });
+});
+
+document.getElementById('searchMvButton').addEventListener('click', function(){
+    updateMvList();
 });
 
 window.onload = function(){
@@ -146,6 +255,9 @@ window.onload = function(){
 document.addEventListener('click', function(event){
     /*监听文档点击事件，检查点击是否在弹窗外部*/
     ModalUtils.checkClickModalPopup(event, 'addMvPopup', 'addMvContent');
+    ModalUtils.checkClickModalPopup(event, 'mvControlPopup', 'mvControlContent');
+    ModalUtils.checkClickModalPopup(event, 'editMvPopup', 'editMvContent');
+    ModalUtils.checkClickModalPopup(event, 'cfmDelPopup', 'cfmDelContent');
 });
 
 window.addEventListener('resize', FuncUtils.throttle(function(){

@@ -17,7 +17,7 @@
         <div class="pathBar paddingExtra">
             <a class="pathBarText" href="/home.html">首页</a><a class="pathBarText">&gt;DVD</a>
         </div>
-        <div class="videoContainer">
+        <div id="videoContainer" class="videoContainer hidden">
             <video id="videoContent" class="video-js videoItem marginExtra" controls preload="auto">
             </video>
         </div>
@@ -66,6 +66,53 @@
                 <a>确认</a>
             </div>
             <div id="addMvCclBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="mvControlPopup" class="popupOverlay hidden">
+    <div id="mvControlContent" class="controlContent">
+        <dl class="controlBtnList">
+            <dd><a id="downloadMvBtn">下载</a></dd>
+            <dd><a id="editMvBtn">编辑</a></dd>
+            <dd><a id="delMvBtn">删除</a></dd>
+        </dl>
+    </div>
+</div>
+<div id="editMvPopup" class="popupOverlay hidden">
+    <div id="editMvContent" class="popupContent">
+        <div class="popupHeader">
+            <a class="headerText">编辑视频信息</a>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">名称：</label>
+                <input type="text" id="editMvName" placeholder="请输入名称"/>
+            </div>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer gapDefault">
+            <div id="editMvCfmBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="editMvCclBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="cfmDelPopup" class="popupOverlay hidden">
+    <div id="cfmDelContent" class="cfmDelContent">
+        <div class="header">
+            <a class="headerText">确认删除</a>
+        </div>
+        <div>
+            <div id="confirmDelBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="cancelDelBtn" class="controlButton clickable">
                 <a>取消</a>
             </div>
         </div>

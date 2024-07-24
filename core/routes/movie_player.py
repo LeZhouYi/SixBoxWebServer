@@ -1,7 +1,7 @@
 import os.path
 from typing import Optional
 
-from flask import Blueprint, render_template, send_file, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, Response, stream_with_context
 from werkzeug.datastructures import FileStorage
 
 from core.config.config import get_config
@@ -21,7 +21,9 @@ RepoInfo = {
     "003": "文件不能为空",
     "004": "文件名重复",
     "005": "上传视频成功",
-    "006": "文件不存在"
+    "006": "文件不存在",
+    "007": "编辑成功",
+    "008": "删除成功"
 }
 
 
@@ -31,6 +33,22 @@ def movie_player_page():
 
 
 @MoviePlayerBp.route("/movie/<movie_id>", methods=["GET"])
+def get_movie_info(movie_id: str):
+    """获取视频详情"""
+    if check_utils.is_empty(movie_id):
+        return route_utils.gen_fail_response(RepoInfo["006"])
+    with MpSever.thread_lock:
+        try:
+            data = MpDb.get(MpQuery.id == movie_id)
+        except KeyError:
+            return route_utils.gen_fail_response(RepoInfo["006"])
+    return jsonify({
+        "name": data["name"],
+        "id": data["id"]
+    })
+
+
+@MoviePlayerBp.route("/movie/file/<movie_id>", methods=["GET"])
 def get_movie(movie_id: str):
     """获取视频"""
     if check_utils.is_empty(movie_id):
@@ -42,7 +60,21 @@ def get_movie(movie_id: str):
             return route_utils.gen_fail_response(RepoInfo["006"])
     filepath = data["path"]
     filename = "%s.mp4" % data["name"]
-    return send_file(os.path.join(os.getcwd(), filepath), as_attachment=True, download_name=filename)
+
+    def generate():
+        with open(os.path.join(os.getcwd(), filepath), 'rb') as f:
+            while True:
+                chunk = f.read(10240)  # 读取 10240 字节的块
+                if not chunk:
+                    break
+                yield chunk
+
+    return Response(stream_with_context(generate()),
+                    mimetype='video/mp4',
+                    headers={
+                        "Content-Disposition": "attachment;filename=%s" % filename,
+                        "Transfer-Encoding": "chunked"
+                    })
 
 
 def check_file_type(file: Optional[FileStorage]):
@@ -85,4 +117,50 @@ def get_movie_list():
     """获取视频列表"""
     with MpSever.thread_lock:
         data = MpDb.all()
+    search = request.args.get("search", None, str)
+    if not check_utils.is_empty(search):
+        search_data = []
+        search = str(search).lower()
+        for item in data:
+            if str(item["name"]).lower().find(search)>-1:
+                search_data.append(item)
+        data = search_data
     return jsonify(MpSever.get_list(["id", "name"], data))
+
+
+@MoviePlayerBp.route("/movie/<movie_id>", methods=["PUT"])
+def edit_movie_info(movie_id: str):
+    if check_utils.is_empty(movie_id):
+        return route_utils.gen_fail_response(RepoInfo["006"])
+    data = request.json
+    if check_utils.is_str_empty(data, "name"):
+        return route_utils.gen_fail_response(RepoInfo["001"])
+    filepath = os.path.join(get_config("movie_save_path"), "%s.mp4" % data["name"])
+    with MpSever.thread_lock:
+        try:
+            now_data = MpDb.get(MpQuery.id == movie_id)
+            if now_data["path"] == str(filepath):
+                return route_utils.gen_fail_response(RepoInfo["004"])
+        except KeyError:
+            return route_utils.gen_fail_response(RepoInfo["006"])
+        os.rename(now_data["path"], filepath)
+        now_data["path"] = filepath
+        now_data["name"] = data["name"]
+        MpDb.update(now_data, MpQuery.id == movie_id)
+        return route_utils.gen_success_response(RepoInfo["007"])
+
+
+@MoviePlayerBp.route("/movie/<movie_id>", methods=["DELETE"])
+def delete_movie(movie_id: str):
+    if check_utils.is_empty(movie_id):
+        return route_utils.gen_fail_response(RepoInfo["006"])
+    with MpSever.thread_lock:
+        try:
+            data = MpDb.get(MpQuery.id == movie_id)
+            path = data["path"]
+            if os.path.exists(path) and os.path.isfile(path):
+                os.remove(path)
+                MpDb.remove(MpQuery.id == movie_id)
+        except KeyError:
+            return route_utils.gen_fail_response(RepoInfo["006"])
+    return route_utils.gen_success_response(RepoInfo["008"])

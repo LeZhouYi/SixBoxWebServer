@@ -5,8 +5,8 @@ import * as PageUtils from './util/page_utils.js';
 import * as FuncUtils from './util/func_utils.js';
 
 const playMode = {
-    "ORDER": 1,  // 顺序循环播放
-    "RANDOM": 2  // 随机循环播放
+    'ORDER': 1,  // 顺序循环播放
+    'RANDOM': 2  // 随机循环播放
 }
 const nowMusicRoute = '/music';  //音乐文件路由
 var nowMusicBlob = null;
@@ -24,7 +24,7 @@ var nowCtrlCollectId = null;  //当前编辑/删除的音乐合集
 var isProgressFocus = false;  //表示当前用户是否在拖动进度条
 
 function onPlayError(error){
-    ModalUtils.displayFailMessage("播放错误");
+    ModalUtils.displayFailMessage('播放错误');
 }
 
 function onLoadMusic(){
@@ -92,13 +92,13 @@ function clearMscAddPop(){
 
 function loadPlayMusic(){
     /*加载并播放该音乐*/
-    let musicUrl = nowMusicRoute+"/"+nowMusicId+'/file';
+    let musicUrl = nowMusicRoute+'/'+nowMusicId+'/file';
     if (nowHowler !== null){
         nowHowler.unload();
     }
     FetchUtils.fetchBlob(musicUrl).then(blob=>{
         if (!blob){
-            ModalUtils.displayFailMessage("网络问题，加载音乐失败");
+            ModalUtils.displayFailMessage('网络问题，加载音乐失败');
             return;
         }
         if (nowMusicBlob){
@@ -143,12 +143,12 @@ function addMscListItem(data, parent){
 
     let preIcon = document.createElement('img');  //前置图标
     preIcon.classList.add('bmIcon');
-    preIcon.src = "static/images/icons/music.png";  //设置来源
-    preIcon.alt = "音乐";
+    preIcon.src = 'static/images/icons/music.png';  //设置来源
+    preIcon.alt = '音乐';
 
     let controlIcon = document.createElement('img');  // 操作图标
-    controlIcon.src = "static/images/icons/more_vertical.png";
-    controlIcon.alt = "操作";
+    controlIcon.src = 'static/images/icons/more_vertical.png';
+    controlIcon.alt = '操作';
     controlIcon.classList.add('bmIcon', 'clickable');
     bindControlBtnClick(controlIcon, data.id);  // 绑定点击事件
 
@@ -178,7 +178,7 @@ function updateMscList(callback){
 
     let searchUrl = nowMusicRoute;
     if (nowCollectId !== null){
-        searchUrl = nowMusicRoute+"?collect="+nowCollectId;
+        searchUrl = nowMusicRoute+'?collect='+nowCollectId;
     }
     FetchUtils.fetchData(searchUrl).then(data=>{
         nowMusicList = data;
@@ -246,10 +246,10 @@ function bindCollectEdit(parentElement, collectId){
 
 function bindStarMusic(parentElement, collectId){
     parentElement.addEventListener('click', function(){
-        let detailUrl = nowMusicRoute + '/' + nowControlId+ "/star";
+        let detailUrl = nowMusicRoute + '/' + nowControlId+ '/star';
         FetchUtils.fetchWithConfig(detailUrl,{
             method: 'PUT',
-            'headers': {
+            headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -257,7 +257,7 @@ function bindStarMusic(parentElement, collectId){
             })
         })
         .then(data => {
-            if (data.status == "Fail") {
+            if (data.status == 'Fail') {
                 ModalUtils.displayFailMessage(data.message);
             } else {
                 ModalUtils.displaySuccessMessage(data.message);
@@ -271,7 +271,7 @@ document.getElementById('playPauseBtn').addEventListener('click', function(){
     /*点击播放音乐*/
     if (nowHowler == null){
         if (nowMusicList == null || nowMusicList.length < 1){
-            ModalUtils.displayFailMessage("当前合集没有歌曲可播放");
+            ModalUtils.displayFailMessage('当前合集没有歌曲可播放');
             return;
         }
         if(nowPlayMode == playMode.ORDER){
@@ -329,7 +329,7 @@ document.getElementById('addMscCfmBtn').addEventListener('click', function(){
     let mscFileName = document.getElementById('addMscFileText');
     let mscFilePath = document.getElementById('addMscFile');
     if (mscFileName.value === ''){
-        ModalUtils.displayFailMessage("请选择音频文件");
+        ModalUtils.displayFailMessage('请选择音频文件');
         return;
     }
     let formData = new FormData();
@@ -339,11 +339,11 @@ document.getElementById('addMscCfmBtn').addEventListener('click', function(){
     formData.append('album', mscAlbum.value);
 
     FetchUtils.fetchWithConfig(nowMusicRoute, {
-        method: "POST",
+        method: 'POST',
         body: formData
     })
     .then(data=>{
-        if (data.status == "Fail"){
+        if (data.status == 'Fail'){
             ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
         }
         else{
@@ -401,9 +401,9 @@ document.getElementById('confirmDelBtn').addEventListener('click', function(){
     if (nowControlId == null){
         return;
     }
-    let delBmUrl = nowMusicRoute+"/"+nowControlId;
+    let delBmUrl = nowMusicRoute+'/'+nowControlId;
     FetchUtils.fetchWithConfig(delBmUrl, {
-        method: "DELETE"
+        method: 'DELETE'
     })
     .then(data=>{
         if(data.status == 'Fail'){
@@ -448,8 +448,8 @@ document.getElementById('editMscCfmBtn').addEventListener('click', function(){
     let mscAlbum = document.getElementById('editMscAlbum');
 
     FetchUtils.fetchWithConfig(editUrl, {
-        method: "PUT",
-        "headers":{
+        method: 'PUT',
+        headers:{
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -459,7 +459,7 @@ document.getElementById('editMscCfmBtn').addEventListener('click', function(){
         })
     })
     .then(data=>{
-        if (data.status == "Fail"){
+        if (data.status == 'Fail'){
             ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
         }
         else{
@@ -474,18 +474,18 @@ document.getElementById('repeatModeBtn').addEventListener('click', function(){
     /*切换当前播放模式*/
     if (nowPlayMode == playMode.ORDER){
         nowPlayMode = playMode.RANDOM;
-        this.src = "static/images/icons/shuffle.png"
+        this.src = 'static/images/icons/shuffle.png'
     }
     else if (nowPlayMode == playMode.RANDOM){
         nowPlayMode = playMode.ORDER;
-        this.src = "static/images/icons/repeat.png"
+        this.src = 'static/images/icons/repeat.png'
     }
 });
 
 document.getElementById('skipForwardBtn').addEventListener('click', function(){
     /*下一首*/
     if(nowMusicList == null || nowMusicList.length < 1){
-        ModalUtils.displayFailMessage("当前合集没有歌曲可播放");
+        ModalUtils.displayFailMessage('当前合集没有歌曲可播放');
         return;
     }
     let nowIndex = findNowIndex();
@@ -520,7 +520,7 @@ document.getElementById('downloadMscBtn').addEventListener('click', function(){
     if (nowControlId == null){
         return;
     }
-    let musicUrl = nowMusicRoute+"/"+nowControlId+'/file';
+    let musicUrl = nowMusicRoute+'/'+nowControlId+'/file';
     const a = document.createElement('a');
     a.href = musicUrl;
     document.body.appendChild(a);
@@ -531,7 +531,7 @@ document.getElementById('downloadMscBtn').addEventListener('click', function(){
 document.getElementById('skipBackBtn').addEventListener('click', function(){
     /*下一首*/
     if(nowMusicList == null || nowMusicList.length < 1){
-        ModalUtils.displayFailMessage("当前合集没有歌曲可播放");
+        ModalUtils.displayFailMessage('当前合集没有歌曲可播放');
         return;
     }
     let nowIndex = findNowIndex();
@@ -611,7 +611,7 @@ document.getElementById('searchMscButton').addEventListener('click', function(){
     }else{
         PageUtils.clearElementByStart('mpList', 2);
         let parentElement = document.getElementById('mpList');
-        let searchUrl = nowMusicRoute+"?search="+inputText
+        let searchUrl = nowMusicRoute+'?search='+inputText
         FetchUtils.fetchData(searchUrl).then(data=>{
             nowMusicList = data;
             nowRandList = DataUtils.genUniqueRandList(nowMusicList.length);
@@ -649,11 +649,11 @@ document.getElementById('addCtlCclBtn').addEventListener('click', function(){
 
 document.getElementById('addCtlCfmBtn').addEventListener('click', function(){
     /*确认新增合集*/
-    let addUrl = nowMusicRoute+"/collect";
+    let addUrl = nowMusicRoute+'/collect';
     let cltName = document.getElementById('addCltName');
     FetchUtils.fetchWithConfig(addUrl, {
-        method: "POST",
-        "headers":{
+        method: 'POST',
+        'headers':{
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -661,7 +661,7 @@ document.getElementById('addCtlCfmBtn').addEventListener('click', function(){
         })
     })
     .then(data=>{
-        if (data.status == "Fail"){
+        if (data.status == 'Fail'){
             ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
         }
         else{
@@ -678,9 +678,9 @@ document.getElementById('cclDelPcBtn').addEventListener('click', function(){
 
 document.getElementById('cfmDelPcBtn').addEventListener('click', function(){
     /*确认删除*/
-    let delUrl = nowMusicRoute+"/collect/"+nowCtrlCollectId;
+    let delUrl = nowMusicRoute+'/collect/'+nowCtrlCollectId;
     FetchUtils.fetchWithConfig(delUrl, {
-        method: "DELETE"
+        method: 'DELETE'
     })
     .then(data=>{
         if(data.status == 'Fail'){
@@ -712,7 +712,7 @@ document.getElementById('editCtlCfmBtn').addEventListener('click', function(){
     let pcName = document.getElementById('editCltName');
     FetchUtils.fetchWithConfig(editUrl, {
         method: 'PUT',
-        'headers': {
+        headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -720,7 +720,7 @@ document.getElementById('editCtlCfmBtn').addEventListener('click', function(){
         })
     })
     .then(data=>{
-        if (data.status == "Fail"){
+        if (data.status == 'Fail'){
             ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
         }
         else{
@@ -757,7 +757,7 @@ document.getElementById('collectMusicBtn').addEventListener('click', function(){
             ModalUtils.adjustPopup('mscAddCltContent', this.getBoundingClientRect());
             ModalUtils.hideModal('mscControlPopup');
         }else{
-            ModalUtils.displayFailMessage("无合集，请先创建合集");  //显示错误信息弹窗
+            ModalUtils.displayFailMessage('无合集，请先创建合集');  //显示错误信息弹窗
             ModalUtils.hideModal('mscControlPopup');
         }
     });
@@ -765,14 +765,14 @@ document.getElementById('collectMusicBtn').addEventListener('click', function(){
 
 document.getElementById('rmCollectMusicBtn').addEventListener('click', function(){
     if(nowCollectId == null){
-        ModalUtils.displayFailMessage("默认合集无法移出");
+        ModalUtils.displayFailMessage('默认合集无法移出');
         ModalUtils.hideModal('mscControlPopup');
         return;
     }
     let removeUrl = nowMusicRoute+'/'+nowControlId+'/remove_star';
     FetchUtils.fetchWithConfig(removeUrl, {
         method: 'PUT',
-        'headers': {
+        headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -780,7 +780,7 @@ document.getElementById('rmCollectMusicBtn').addEventListener('click', function(
         })
     })
     .then(data=>{
-        if (data.status == "Fail"){
+        if (data.status == 'Fail'){
             ModalUtils.displayFailMessage(data.message);  //显示错误信息弹窗
         }
         else{
