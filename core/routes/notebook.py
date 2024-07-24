@@ -1,13 +1,13 @@
 from flask import Blueprint, render_template, request, jsonify
 
-from core.config.config import get_config
+from core.config.config import get_config_path
 from core.data.notebook import NotebookServer, NotebookType
 from core.routes import route_utils
 from core.util import check_utils
 
 NotebookBp = Blueprint('notebook', __name__)
 
-NbServer = NotebookServer(get_config("notebook_path"))
+NbServer = NotebookServer(get_config_path("notebook_path"))
 NbDB = NbServer.db
 NbQuery = NbServer.nb_query
 

@@ -1,13 +1,13 @@
 from flask import Blueprint, render_template, request, jsonify
 
-from core.config.config import get_config
+from core.config.config import get_config_path
 from core.data.bookmark import BookmarkServer, BookmarkType
 from core.routes import route_utils
 from core.util import check_utils
 
 BookmarkBp = Blueprint('bookmark', __name__)
 
-BmServer = BookmarkServer(get_config("bookmark_path"))
+BmServer = BookmarkServer(get_config_path("bookmark_path"))
 BmDB = BmServer.db
 BmQuery = BmServer.bm_query
 

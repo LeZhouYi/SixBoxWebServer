@@ -10,6 +10,5 @@ data/
 !core/data/
 
 # pyinstaller
-*.spec
 dist/
 build/

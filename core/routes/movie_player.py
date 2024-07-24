@@ -1,17 +1,18 @@
 import os.path
+import sys
 from typing import Optional
 
 from flask import Blueprint, render_template, request, jsonify, Response, stream_with_context
 from werkzeug.datastructures import FileStorage
 
-from core.config.config import get_config
+from core.config.config import get_config_path, get_config
 from core.data.movie_player import MovieServer
 from core.routes import route_utils
 from core.util import check_utils
 
 MoviePlayerBp = Blueprint('movie', __name__)
 
-MpSever = MovieServer(get_config("movie_path"))
+MpSever = MovieServer(get_config_path("movie_path"))
 MpQuery = MpSever.mp_query
 MpDb = MpSever.db
 
@@ -62,7 +63,7 @@ def get_movie(movie_id: str):
     filename = "%s.mp4" % data["name"]
 
     def generate():
-        with open(os.path.join(os.getcwd(), filepath), 'rb') as f:
+        with open(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), filepath), 'rb') as f:
             while True:
                 chunk = f.read(10240)  # 读取 10240 字节的块
                 if not chunk:
@@ -101,7 +102,8 @@ def add_movie():
         with MpSever.thread_lock:
             if len(MpDb.search(MpQuery.path == filepath)) > 0:
                 return route_utils.gen_fail_response(RepoInfo["004"])
-        file.save(filepath)
+        root_path = os.path.dirname(os.path.realpath(sys.argv[0]))
+        file.save(os.path.join(root_path, filepath))
         data = {
             "name": filename,
             "path": filepath
@@ -122,7 +124,7 @@ def get_movie_list():
         search_data = []
         search = str(search).lower()
         for item in data:
-            if str(item["name"]).lower().find(search)>-1:
+            if str(item["name"]).lower().find(search) > -1:
                 search_data.append(item)
         data = search_data
     return jsonify(MpSever.get_list(["id", "name"], data))
@@ -135,7 +137,7 @@ def edit_movie_info(movie_id: str):
     data = request.json
     if check_utils.is_str_empty(data, "name"):
         return route_utils.gen_fail_response(RepoInfo["001"])
-    filepath = os.path.join(get_config("movie_save_path"), "%s.mp4" % data["name"])
+    filepath = os.path.join(get_config_path("movie_save_path"), "%s.mp4" % data["name"])
     with MpSever.thread_lock:
         try:
             now_data = MpDb.get(MpQuery.id == movie_id)

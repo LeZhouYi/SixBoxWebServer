@@ -1,21 +1,22 @@
 import os.path
+import sys
 from typing import Optional
 
 from flask import Blueprint, render_template, send_file, request, jsonify
 from werkzeug.datastructures import ImmutableMultiDict, FileStorage
 
-from core.config.config import get_config
+from core.config.config import get_config_path, get_config
 from core.data.music_player import MusicServer, PlayCollectServer
 from core.routes import route_utils
 from core.util import check_utils
 
 MusicPlayerBp = Blueprint('music', __name__)
 
-MscServer = MusicServer(get_config("music_path"))
+MscServer = MusicServer(get_config_path("music_path"))
 MscDB = MscServer.db
 MscQuery = MscServer.msc_query
 
-PcServer = PlayCollectServer(get_config("play_collect_path"))
+PcServer = PlayCollectServer(get_config_path("play_collect_path"))
 PcDB = PcServer.db
 PcQuery = PcServer.pc_query
 
@@ -53,7 +54,7 @@ def get_music_file(music_id: str):
     try:
         with MscServer.thread_lock:
             data = MscDB.get(MscQuery.id == music_id)
-            music_path = os.path.join(os.getcwd(), data["path"])
+            music_path = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), data["path"])
             download_name = "%s-%s.mp3" % (data["artist"], data["name"])
         # download_name = route_utils.rfc5987_encode(download_name)
         return send_file(music_path, as_attachment=True, download_name=download_name)
@@ -106,7 +107,8 @@ def add_music():
                     MscQuery.artist == form_data.get("artist") and MscQuery.name == form_data.get("name"))) > 0:
                 return route_utils.gen_fail_response(RepoInfo["016"])
         filepath = os.path.join(get_config("music_save_path"), filename)
-        file.save(filepath)
+        root_path = os.path.dirname(os.path.realpath(sys.argv[0]))
+        file.save(os.path.join(root_path, filepath))
         data = {
             "name": form_data.get("name"),
             "album": form_data.get("album"),
@@ -171,7 +173,7 @@ def edit_music(music_id: str):
             data = MscDB.get(MscQuery.id == music_id)
             path = data["path"]
             new_name = "%s-%s.mp3" % (request_data["artist"], request_data["name"])
-            new_path = os.path.join(get_config("music_save_path"), new_name)
+            new_path = os.path.join(get_config_path("music_save_path"), new_name)
             if os.path.exists(new_path) and new_path != path:
                 return route_utils.gen_fail_response(RepoInfo["009"])
             os.rename(path, new_path)

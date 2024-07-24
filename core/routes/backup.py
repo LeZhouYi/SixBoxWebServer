@@ -6,7 +6,7 @@ from typing import Optional
 from flask import Blueprint, render_template, Response, request
 from werkzeug.datastructures import FileStorage
 
-from core.config.config import get_config
+from core.config.config import get_config_path
 from core.routes import route_utils
 
 BackupBp = Blueprint('backup', __name__)
@@ -27,7 +27,7 @@ def backup_page():
 def download_data():
     """下载所有数据"""
     memory_zip = io.BytesIO()
-    data_path = get_config("db_path")
+    data_path = get_config_path("db_path")
     with zipfile.ZipFile(memory_zip, "w", zipfile.ZIP_DEFLATED) as zip_file:
         for root, dirs, files in os.walk(data_path):
             for file in files:
@@ -60,7 +60,7 @@ def upload_data():
         if result is not None:
             return result
         filename = form_data.get("name")
-        filepath = os.path.join(get_config("upload_file_path"), filename)
+        filepath = os.path.join(get_config_path("upload_file_path"), filename)
         file.save(filepath)
         return route_utils.gen_success_response(RepoInfo["002"])
     return route_utils.gen_fail_response(RepoInfo["003"])
