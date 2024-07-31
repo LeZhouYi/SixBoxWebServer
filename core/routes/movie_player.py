@@ -1,5 +1,6 @@
 import os.path
 import sys
+import urllib.parse
 from typing import Optional
 
 from flask import Blueprint, render_template, request, jsonify, Response, stream_with_context
@@ -73,7 +74,7 @@ def get_movie(movie_id: str):
     return Response(stream_with_context(generate()),
                     mimetype='video/mp4',
                     headers={
-                        "Content-Disposition": "attachment;filename=%s" % filename,
+                        "Content-Disposition": "attachment;filename=%s" % urllib.parse.quote(filename),
                         "Transfer-Encoding": "chunked"
                     })
 

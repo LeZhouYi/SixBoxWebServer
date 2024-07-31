@@ -21,7 +21,7 @@ function playMovie(){
     let videoUrl = nowRoute + '/file/' + nowPlayId;
     FetchUtils.fetchBlob(videoUrl).then(blob=>{
         if (!blob){
-            ModalUtils.displayFailMessage('网络问题，加载音乐失败');
+            ModalUtils.displayFailMessage('网络问题，加载视频失败');
             return;
         }
         if (nowMovieBlob){
@@ -56,7 +56,7 @@ function addMvListItem(data, parent){
     let preIcon = document.createElement('img');  //前置图标
     preIcon.classList.add('bmIcon');
     preIcon.src = 'static/images/icons/tv.png';  //设置来源
-    preIcon.alt = '音乐';
+    preIcon.alt = '视频';
 
     let controlIcon = document.createElement('img');  // 操作图标
     controlIcon.src = 'static/images/icons/more_vertical.png';
