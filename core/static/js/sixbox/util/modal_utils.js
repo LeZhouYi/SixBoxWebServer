@@ -97,12 +97,12 @@ export function closeAllModal(event, ...modals){
     }
 }
 
-export function adjustPopup(elementId, rect){
+export function adjustPopup(elementId, rect, offset=0.5){
     /*调整弹窗的显示位置*/
     let popUpElement = document.getElementById(elementId);
     let popRect = popUpElement.getBoundingClientRect();
     if (rect.top+popRect.height > window.innerHeight){
-        popUpElement.style.top = (window.innerHeight - popRect.height - 15) + 'px';
+        popUpElement.style.top = (window.innerHeight - popRect.height+ popRect.height * offset) + 'px';
     }else{
         popUpElement.style.top = rect.top + 'px';
     }

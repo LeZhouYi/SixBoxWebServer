@@ -153,6 +153,15 @@ def del_music(music_id: str):
             if os.path.exists(path) and os.path.isfile(path):
                 os.remove(path)
             MscDB.remove(MscQuery.id == music_id)
+        with PcServer.thread_lock:
+            will_updates = []
+            for item_data in PcDB.all():
+                if music_id in item_data["playList"]:
+                    will_updates.append(item_data["id"])
+            for pc_id in will_updates:
+                pc_data = PcDB.get(PcQuery.id == pc_id)
+                pc_data["playList"].remove(music_id)
+                PcDB.update(pc_data, PcQuery.id == pc_id)
         return route_utils.gen_success_response(RepoInfo["008"])
     except KeyError:
         return route_utils.gen_fail_response(RepoInfo["001"])

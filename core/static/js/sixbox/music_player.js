@@ -126,9 +126,7 @@ function bindControlBtnClick(button, controlId){
     button.addEventListener('click', function(event){
         nowControlId = controlId;
         ModalUtils.displayModal('mscControlPopup');
-        let element = document.getElementById('mscControlContent');
-        element.style.left = event.clientX + 'px';
-        element.style.top = event.clientY + 'px';
+        ModalUtils.adjustPopup('mscControlContent', this.getBoundingClientRect())
     });
 }
 
