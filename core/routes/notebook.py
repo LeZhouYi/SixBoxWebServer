@@ -1,9 +1,14 @@
-from flask import Blueprint, render_template, request, jsonify
+import io
+import urllib.parse
+
+from flask import Blueprint, render_template, request, jsonify, Response
+from weasyprint import HTML
 
 from core.config.config import get_config_path
 from core.data.notebook import NotebookServer, NotebookType
 from core.routes import route_utils
 from core.util import check_utils
+from core.util.base_utils import load_string_data
 
 NotebookBp = Blueprint('notebook', __name__)
 
@@ -19,7 +24,8 @@ RepoInfo = {
     "005": "新增成功",
     "006": "数据不存在",
     "007": "删除成功",
-    "008": "编辑成功"
+    "008": "编辑成功",
+    "009": "文件夹未提供转换"
 }
 
 
@@ -117,7 +123,7 @@ def del_notebook(nb_id):
 
 
 @NotebookBp.route("/notebook/<nb_id>", methods=["PUT"])
-def edit_notebook(nb_id):
+def edit_notebook(nb_id: str):
     """编辑书签"""
     check_result = check_nb_id(nb_id)
     if check_result is not None:
@@ -128,3 +134,29 @@ def edit_notebook(nb_id):
         return check_result
     NbServer.edit_data(nb_id, data, "/notebook.html")
     return route_utils.gen_success_response(RepoInfo["008"])
+
+
+@NotebookBp.route("/notebook/<nb_id>/pdf", methods=["GET"])
+def download_pdf(nb_id: str):
+    check_result = check_nb_id(nb_id)
+    if check_result is not None:
+        return check_result
+    with NbServer.thread_lock:
+        try:
+            data = NbDB.get(NbQuery.id == nb_id)
+        except KeyError:
+            return route_utils.gen_fail_response(RepoInfo["006"])
+    if check_utils.is_empty(data["content"]):
+        return route_utils.gen_fail_response(RepoInfo["009"])
+    html_template = load_string_data(get_config_path("pdf_template"))
+    html_content = html_template % data["content"]
+    pdf_file = io.BytesIO()
+    HTML(string=html_content).write_pdf(pdf_file)
+    response = Response(
+        pdf_file.getvalue(),
+        mimetype='application/pdf',
+        headers={
+            'Content-Disposition': 'attachment; filename=%s.pdf' % urllib.parse.quote(data["name"])
+        }
+    )
+    return response

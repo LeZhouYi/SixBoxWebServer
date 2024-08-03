@@ -409,7 +409,9 @@ document.getElementById('confirmDelBtn').addEventListener('click', function(){
         }else{
             ModalUtils.displaySuccessMessage(data.message);  //显示新增成功信息弹窗
             ModalUtils.hideModal('cfmDelPopup');
-            updateMscList();  //更新当前书签列表
+            updateMscList(function(){
+                document.getElementById('skipForwardBtn').click();
+            });  //更新当前书签列表
         }
     });
 });

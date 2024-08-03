@@ -396,6 +396,22 @@ document.getElementById('searchNbInput').addEventListener('keydown', function(){
     }
 });
 
+document.getElementById('downloadPDFBtn').addEventListener('click', function(){
+    /*下载PDF*/
+    console.log("test");
+    if (nowControlId == null){
+        ModalUtils.displayFailMessage("请先选择笔记");
+    }
+    ModalUtils.hideModal('nbControlPopup');
+    let downDataUrl = nowRoute + "/" + nowControlId + "/pdf";
+    if (FetchUtils.fetchFile(downDataUrl)){
+        ModalUtils.displaySuccessMessage('正在下载');
+    }
+    else{
+        ModalUtils.displayFailMessage('下载失败');
+    }
+});
+
 document.addEventListener('keydown', function(event){
     /*监听Esc并退出弹窗*/
     ModalUtils.escCloseModal(event, 'addNbPopup', 'nbControlPopup', 'cfmDelPopup', 'editNbPopup', 'readNbPopup');
