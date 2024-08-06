@@ -114,6 +114,10 @@ function updateNbList() {
     let currentUrl = window.location.href;
     let parentId = FetchUtils.getUrlParams(currentUrl, 'parentId'); // 获取参数parentId
     let getListUrl = nowRoute + "?parentId=" + parentId;  //构造url
+    let searchInput = document.getElementById('searchNbInput');
+    if (searchInput.value !== ""){
+        getListUrl = nowRoute + "?search="+searchInput.value;
+    }
 
     let dataList = document.getElementById('nbList')
     dataList.innerHTML = '';  // 清空表格内容
@@ -372,20 +376,7 @@ document.getElementById('editConfirmBtn').addEventListener('click', function () 
 
 document.getElementById('searchNbButton').addEventListener('click', function(){
     /*点击搜索按钮事件*/
-    let searchInput = document.getElementById('searchNbInput').value;
-    if (searchInput == null || searchInput == ''){
-        updateBmList();
-    }else{
-        let searchUrl = nowRoute+"?search="+searchInput;
-        let dataList = document.getElementById('nbList')
-        dataList.innerHTML = '';  // 清空表格内容
-
-        FetchUtils.fetchData(searchUrl).then(data=>{
-            data.forEach(element=>{
-                addNbListItem(element, dataList);
-            });
-        });
-    }
+    updateNbList();
 });
 
 document.getElementById('searchNbInput').addEventListener('keydown', function(){

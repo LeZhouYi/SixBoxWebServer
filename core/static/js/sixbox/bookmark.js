@@ -88,7 +88,12 @@ function updateBmList(){
     /* 请求/bookmarks接口并刷新当前页面的书签列表内容 */
     let currentUrl = window.location.href;
     let parentId = FetchUtils.getUrlParams(currentUrl, 'parentId'); // 获取参数parentId
+    let searchInput = document.getElementById('searchBmInput');
+
     let getListUrl = nowRoute+"?parentId="+parentId;  //构造url
+    if (searchInput.value!==''){
+        getListUrl = nowRoute+"?search="+searchInput.value;
+    }
 
     let dataList = document.getElementById('bmList')
     dataList.innerHTML = '';  // 清空表格内容
@@ -118,17 +123,21 @@ function controlSelectTypeOption(selectValue, changeElement){
     }
 }
 
-function createBmFolderOption(selectId){
+function createBmFolderOption(selectId, isCreate=true){
     /*为selectId 对应selectElement构造当前的目录选项*/
     let currentUrl = window.location.href;
     let parentId = FetchUtils.getUrlParams(currentUrl, 'parentId'); // 获取参数parentId
-    let getBmFolderUrl = nowRoute+"?type=2&parentId="+parentId;
+    let getBmFolderUrl = nowRoute+'?type=2';
 
     //请求并获取当前书签下的所有目录，并用于构造选项
     FetchUtils.fetchData(getBmFolderUrl).then(data=>{
         let addBmFolderSelect = document.getElementById(selectId);
         addBmFolderSelect.innerHTML = ''; // 清空目录下拉列表
-        addBmFolderSelect.appendChild(PageUtils.createOption(parentId, '当前目录'));
+        if (isCreate){
+            addBmFolderSelect.appendChild(PageUtils.createOption(parentId, '当前目录'));
+        }else{
+            addBmFolderSelect.appendChild(PageUtils.createOption('', '当前目录'));
+        }
         data.forEach(dataItem=>{
             if(dataItem.id!==nowControlId){
                 let option = PageUtils.createOption(dataItem.id, dataItem.name);
@@ -141,7 +150,7 @@ function createBmFolderOption(selectId){
 document.getElementById('addBmButton').addEventListener('click', function(){
     ModalUtils.displayModal('addBmPopup'); //显示弹窗
     document.getElementById('addBmName').focus();
-    createBmFolderOption('addBmFolderSelect'); //构造选项
+    createBmFolderOption('addBmFolderSelect', true); //构造选项
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -241,7 +250,7 @@ document.getElementById('editBmBtn').addEventListener('click', function(){
         ModalUtils.displayFailMessage('书签不存在');
         return;
     }
-    createBmFolderOption('editBmFolderSelect'); // 构造选项
+    createBmFolderOption('editBmFolderSelect', false); // 构造选项
 
     let bmDetailUrl = nowRoute+'/'+nowControlId;
     FetchUtils.fetchWithConfig(bmDetailUrl).then(data=>{
@@ -256,8 +265,6 @@ document.getElementById('editBmBtn').addEventListener('click', function(){
             controlSelectTypeOption(data.type, changeElement);
             document.getElementById('editBmTypeSelect').disabled = true;
 
-            PageUtils.setSelectedByValue('editBmFolderSelect', data.parentId); // 设置当前文件夹
-            document.getElementById('editBmFolderSelect').disabled = true;
             ModalUtils.displayModal('editBmPopup');  //显示编辑弹窗
             document.getElementById('editBmName').focus();
         }
@@ -300,20 +307,7 @@ document.getElementById('editConfirmBtn').addEventListener('click', function(){
 
 document.getElementById('searchBmButton').addEventListener('click', function(){
     /*点击搜索按钮事件*/
-    let searchInput = document.getElementById('searchBmInput').value;
-    if (searchInput == null || searchInput == ''){
-        updateBmList();
-    }else{
-        let searchUrl = nowRoute+"?search="+searchInput;
-        let dataList = document.getElementById('bmList')
-        dataList.innerHTML = '';  // 清空表格内容
-
-        FetchUtils.fetchData(searchUrl).then(data=>{
-            data.forEach(element=>{
-                addBmListItem(element, dataList);
-            });
-        });
-    }
+    updateBmList();
 });
 
 document.getElementById('searchBmInput').addEventListener('keydown', function(){

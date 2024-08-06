@@ -20,7 +20,9 @@ RepoInfo = {
     "006": "文件夹不能为空",
     "007": "删除成功",
     "008": "新增成功",
-    "009": "编辑成功"
+    "009": "编辑成功",
+    "010": "文件夹不存在",
+    "011": "数据不存在"
 }
 
 
@@ -116,6 +118,12 @@ def add_bookmark():
     check_result = check_bm_data(data)
     if check_result is not None:
         return check_result
+    if "parentId" in data and data["parentId"] != "":
+        with BmServer.thread_lock:
+            try:
+                BmDB.get(BmQuery.id == data["parentId"])
+            except KeyError:
+                return route_utils.gen_fail_response(RepoInfo["010"])
     BmServer.add_data(data, "/bookmark.html")
     return route_utils.gen_success_response(RepoInfo["008"])
 
@@ -130,5 +138,8 @@ def edit_bookmark(bm_id):
     check_result = check_bm_data(data)
     if check_result is not None:
         return check_result
-    BmServer.edit_data(bm_id, data)
+    try:
+        BmServer.edit_data(bm_id, data)
+    except KeyError:
+        return route_utils.gen_fail_response(RepoInfo["011"])
     return route_utils.gen_success_response(RepoInfo["009"])

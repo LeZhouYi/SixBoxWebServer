@@ -24,6 +24,7 @@ class BookmarkServer:
         self.bm_query = Query()
         self.rand = Random()
         self.thread_lock = threading.Lock()
+        self.init()
 
     def init(self):
         if len(self.db.all()) == 0:
@@ -41,6 +42,8 @@ class BookmarkServer:
             key_list = ["name", "url", "parentId", "type"]
             data = data_utils.extra_data(data, key_list)
             data["id"] = "%s%s" % (int(time.time()), str(self.rand.randint(100, 999)))
+            if not ("parentId" in data and data["parentId"] != ""):
+                data["parentId"] = "1"
             if data["type"] == BookmarkType.BOOKMARK:
                 self.db.insert(data)
             elif data["type"] == BookmarkType.FOLDER:
@@ -53,7 +56,8 @@ class BookmarkServer:
             key_list = ["name", "url", "parentId", "type"]
             data = data_utils.extra_data(data, key_list)
             now_data = self.db.get(self.bm_query.id == bm_id)
-            data["parentId"] = now_data["parentId"]
+            if not ("parentId" in data and data["parentId"] != ""):
+                data["parentId"] = now_data["parentId"]
             self.db.update(data_utils.extra_data(data, key_list), (self.bm_query.id == bm_id))
 
     @staticmethod
