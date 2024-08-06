@@ -137,13 +137,13 @@ function createNbFolderOption(selectId) {
     /*创建笔记文件夹选项*/
     let currentUrl = window.location.href;
     let parentId = FetchUtils.getUrlParams(currentUrl, 'parentId'); // 获取参数parentId
-    let getBmFolderUrl = nowRoute + "?type=2&parentId=" + parentId;
+    let getBmFolderUrl = nowRoute + "?type=2";
 
     //请求并获取当前目录下的所有目录，并用于构造选项
     FetchUtils.fetchData(getBmFolderUrl).then(data => {
         let addNbFolderSelect = document.getElementById(selectId);
         addNbFolderSelect.innerHTML = ''; // 清空目录下拉列表
-        addNbFolderSelect.appendChild(PageUtils.createOption(parentId, '当前目录'));
+        addNbFolderSelect.appendChild(PageUtils.createOption('', '当前目录'));
         data.forEach(dataItem => {
             if (dataItem.id !== nowControlId) {
                 let option = PageUtils.createOption(dataItem.id, dataItem.name);
@@ -308,7 +308,6 @@ document.getElementById('editNbBtn').addEventListener('click', function () {
         return;
     }
     createNbFolderOption('editNbFolderSelect');
-    document.getElementById('editNbFolderSelect').disabled = true;
 
     let nbDetailUrl = nowRoute + '/' + nowControlId;
     FetchUtils.fetchWithConfig(nbDetailUrl).then(data => {

@@ -73,8 +73,6 @@ def check_nb_data(data):
     if data["type"] == NotebookType.NOTEBOOK:
         if check_utils.is_str_empty(data, "content"):
             return route_utils.gen_fail_response(RepoInfo["003"])
-    if check_utils.is_none(data, "parentId"):
-        return route_utils.gen_fail_response(RepoInfo["004"])
 
 
 @NotebookBp.route("/notebook", methods=["POST"])

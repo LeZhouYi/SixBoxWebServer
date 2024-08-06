@@ -163,7 +163,7 @@ def delete_movie(movie_id: str):
             path = data["path"]
             if os.path.exists(path) and os.path.isfile(path):
                 os.remove(path)
-                MpDb.remove(MpQuery.id == movie_id)
+            MpDb.remove(MpQuery.id == movie_id)
         except KeyError:
             return route_utils.gen_fail_response(RepoInfo["006"])
     return route_utils.gen_success_response(RepoInfo["008"])

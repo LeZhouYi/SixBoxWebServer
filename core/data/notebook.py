@@ -24,6 +24,17 @@ class NotebookServer:
         self.nb_query = Query()
         self.rand = Random()
         self.thread_lock = threading.Lock()
+        self.init()
+
+    def init(self):
+        if len(self.db.all()) == 0:
+            self.db.insert({
+                "id": 1,
+                "name": "根目录",
+                "url": "/notebook.html?parentId=1",
+                "type": NotebookType.FOLDER,
+                "content": None
+            })
 
     def add_data(self, data: dict, html_url: str):
         """新增数据"""
@@ -31,6 +42,8 @@ class NotebookServer:
             key_list = ["name", "url", "parentId", "type", "content"]
             data = data_utils.extra_data(data, key_list)
             data["id"] = "%s%s" % (int(time.time()), str(self.rand.randint(100, 999)))
+            if data["parentId"] == "":
+                data["parentId"] = "1"
             if data["type"] == NotebookType.NOTEBOOK:
                 self.db.insert(data)
             elif data["type"] == NotebookType.FOLDER:
@@ -43,7 +56,8 @@ class NotebookServer:
             key_list = ["name", "url", "parentId", "type", "content"]
             data = data_utils.extra_data(data, key_list)
             now_data = self.db.get(self.nb_query.id == nb_id)
-            data["parentId"] = now_data["parentId"]
+            if not ("parentId" in data and data["parentId"] != ""):
+                data["parentId"] = now_data["parentId"]
             if data["type"] == NotebookType.FOLDER:
                 data["url"] = "%s?parentId=%s" % (html_url, nb_id)
             self.db.update(data_utils.extra_data(data, key_list), (self.nb_query.id == nb_id))

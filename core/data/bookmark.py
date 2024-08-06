@@ -25,6 +25,16 @@ class BookmarkServer:
         self.rand = Random()
         self.thread_lock = threading.Lock()
 
+    def init(self):
+        if len(self.db.all()) == 0:
+            self.db.insert({
+                "id": 1,
+                "name": "根目录",
+                "url": "/bookmark.html?parentId=1",
+                "type": BookmarkType.FOLDER,
+                "content": None
+            })
+
     def add_data(self, data: dict, html_url: str):
         """新增数据"""
         with self.thread_lock:
