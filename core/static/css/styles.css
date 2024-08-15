@@ -525,6 +525,7 @@ body, html {
     border-radius: var(--base-radius);
     border: var(--control-border);
     box-sizing: border-box;
+    background: var(--control-background);
 }
 
 /*书签列表*/
@@ -549,6 +550,29 @@ body, html {
     grid-template-columns: 3fr var(--extra-padding) 1fr;
     align-items: center;
     font-size: 0;
+}
+
+.videoCtrlPanel{
+    height: calc(var(control-bar-height) + var(--input-gap));
+    margin-bottom: var(--input-gap);
+    gap: var(--input-gap);
+    display: flex;
+    align-items: center;
+    font-size: 0;
+    justify-content: flex-end;
+    border-radius: var(--base-radius);
+    flex-direction: row;
+    box-sizing: border-box;
+    padding: 0 var(--base-padding);
+}
+.videoCtrlPanel>:first-child{
+    width: calc(100% - var(--control-bar-height) * 4 - var(--input-gap) * 4);
+}
+.videoPlayText{
+    font-size: 0.16rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 /*音乐内容栏*/
@@ -720,6 +744,10 @@ body, html {
     width: 100%;
     height: 100%;
     border-radius: 5px;
+}
+
+.searchInput:-webkit-autofill{
+    -webkit-box-shadow: 0 0 0 1000px var(--control-background) inset;
 }
 
 @media (min-device-width: 601px){

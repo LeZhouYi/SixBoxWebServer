@@ -14,8 +14,9 @@ function playMovie(){
         ModalUtils.displayFailMessage('未有选择视频');
         return;
     }
-    ModalUtils.displayModal('videoContainer');
+    ModalUtils.displayElement('videoContainer');
     moviePlayer = videojs('#videoContent');
+
     var source = document.createElement('source');
 
     let videoUrl = nowRoute + '/file/' + nowPlayId;
@@ -50,6 +51,7 @@ function addMvListItem(data, parent){
     nameSpan.textContent = data.name;  // 书签名称
     nameSpan.addEventListener('click', function(){
         nowPlayId = data.id;
+        document.getElementById('nowPlayText').text = '正在播放: ' + data.name;
         playMovie();
     });
 
@@ -245,6 +247,45 @@ document.getElementById('confirmDelBtn').addEventListener('click', function(){
 
 document.getElementById('searchMvButton').addEventListener('click', function(){
     updateMvList();
+});
+
+document.getElementById('backMinuteButton').addEventListener('click', function(){
+    if (moviePlayer){
+        let currentTime = moviePlayer.currentTime();
+        moviePlayer.currentTime(Math.max(0, currentTime-60));
+        if (moviePlayer.paused()){
+            moviePlayer.play();
+        }
+    }
+});
+document.getElementById('backSecondButton').addEventListener('click', function(){
+    if (moviePlayer){
+        let currentTime = moviePlayer.currentTime();
+        moviePlayer.currentTime(Math.max(0, currentTime-10));
+        if (moviePlayer.paused()){
+            moviePlayer.play();
+        }
+    }
+});
+
+document.getElementById('forwardSecondButton').addEventListener('click', function(){
+    if (moviePlayer){
+        let currentTime = moviePlayer.currentTime();
+        moviePlayer.currentTime(Math.min(moviePlayer.duration(), currentTime+10));
+        if (moviePlayer.paused()){
+            moviePlayer.play();
+        }
+    }
+});
+
+document.getElementById('forwardMinuteButton').addEventListener('click', function(){
+    if (moviePlayer){
+        let currentTime = moviePlayer.currentTime();
+        moviePlayer.currentTime(Math.min(moviePlayer.duration(), currentTime+60));
+        if (moviePlayer.paused()){
+            moviePlayer.play();
+        }
+    }
 });
 
 window.onload = function(){
