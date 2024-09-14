@@ -5,6 +5,26 @@ import * as FuncUtils from './util/func_utils.js';
 
 const nowRoute = "/backup"
 
+function updateBmList(){
+    /* 请求/bookmarks接口并刷新当前页面的书签列表内容 */
+    let searchInput = document.getElementById('searchBmInput');
+
+    let getListUrl = nowRoute+"?parentId="+parentId;  //构造url
+    if (searchInput.value!==''){
+        getListUrl = nowRoute+"?search="+searchInput.value;
+    }
+
+    let dataList = document.getElementById('bmList')
+    dataList.innerHTML = '';  // 清空表格内容
+
+    addLastPageItem(parentId, dataList); //添加上一页
+    FetchUtils.fetchData(getListUrl).then(data=>{
+        data.forEach(element=>{
+            addBmListItem(element, dataList);
+        });
+    });
+}
+
 document.getElementById('appDownData').addEventListener('click', function(){
     let downDataUrl = nowRoute
     if (FetchUtils.fetchFile(downDataUrl)){

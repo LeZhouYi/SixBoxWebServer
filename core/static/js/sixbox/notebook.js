@@ -147,7 +147,7 @@ function createNbFolderOption(selectId) {
     FetchUtils.fetchData(getBmFolderUrl).then(data => {
         let addNbFolderSelect = document.getElementById(selectId);
         addNbFolderSelect.innerHTML = ''; // 清空目录下拉列表
-        addNbFolderSelect.appendChild(PageUtils.createOption('', '当前目录'));
+        addNbFolderSelect.appendChild(PageUtils.createOption(parentId, '当前目录'));
         data.forEach(dataItem => {
             if (dataItem.id !== nowControlId) {
                 let option = PageUtils.createOption(dataItem.id, dataItem.name);
