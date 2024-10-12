@@ -681,11 +681,11 @@ body, html {
         background-color: var(--control-background);
         font-size: var(--main-font-size);
         padding: var(--base-padding);
-        display: flex;
-        flex-direction: column;
+        display: grid;
         box-sizing: border-box;
         gap: var(--input-gap);
         overflow-y: auto;
+        max-height: 100%;
     }
     /*笔记模态弹窗内容-纯显示*/
     .nbPopupDisplay{
@@ -828,11 +828,11 @@ body, html {
         background-color: var(--control-background);
         font-size: var(--main-font-size);
         padding: var(--base-padding);
-        display: flex;
-        flex-direction: column;
+        display: grid;
         box-sizing: border-box;
         gap: var(--input-gap);
         overflow-y: auto;
+        max-height: 100%;
     }
     /*笔记模态弹窗内容-纯显示*/
     .nbPopupDisplay{
