@@ -194,7 +194,7 @@ tinymce.init({
     license_key: 'gpl',
     plugins: 'lists wordcount advlist code charmap insertdatetime preview',
     toolbar: toolbar,
-    height: '350px'
+    height: '600px'
 });
 
 tinymce.init({

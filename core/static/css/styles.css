@@ -539,6 +539,19 @@ body, html {
     height: var(--control-bar-height);
 }
 
+.searchCtrlBar{
+    margin: 0;
+    margin-bottom: var(--input-gap);
+    border: 0;
+    display: grid;
+    grid-template-columns: 1fr var(--control-btn-width) var(--control-bar-height);
+    gap: var(--music-control-gap);
+    font-size: var(--main-font-size);
+    align-items: center; /* 垂直居中对齐子元素（如果需要的话） */
+    overflow: hidden;
+    height: var(--control-bar-height);
+}
+
 /*音乐合集操作栏*/
 .musicCtrlIcon{
     width: var(--control-bar-height);

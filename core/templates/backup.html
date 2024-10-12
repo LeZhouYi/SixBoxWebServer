@@ -17,7 +17,7 @@
         <div class="pathBar paddingExtra">
             <a class="pathBarText" href="/home.html">首页</a><a class="pathBarText">&gt;备份</a>
         </div>
-        <div class="content marginExtra hidden">
+        <div class="content marginExtra">
             <div class="appContainer">
                 <div id="appDownData" class="appItem clickable">
                     <img src="static/images/icons/download.png">
@@ -30,19 +30,17 @@
                 </label>
             </div>
         </div>
-        <div class="controlPanel paddingExtra">
-            <div class="searchBar">
-                <input id="searchBmInput" class="searchInput" placeholder="输入文本搜索">
-                <div id="searchBmButton" class="searchButton clickable">
+        <div class="searchCtrlBar paddingExtra">
+            <div class="searchBar rightExtra">
+                <input id="searchBackupInput" class="searchInput" placeholder="输入文本搜索">
+                <div id="searchBackupButton" class="searchButton clickable">
                     <a>搜索</a>
                 </div>
             </div>
-            <div></div>
-            <div class="controlBar">
-                <div id="addBmButton" class="controlButton clickable">
-                    <a>新增书签</a>
-                </div>
+            <div id="addBackUpButton" class="controlButton clickable">
+                <a>新增文件</a>
             </div>
+            <img id="backupMoreCtrlBtn" src="static/images/icons/more_vertical.png" class="musicCtrlIcon">
         </div>
         <dl id="fbList" class="bmList marginExtra"></dl>
     </div>
