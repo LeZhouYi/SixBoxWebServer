@@ -36,7 +36,7 @@ class NotebookServer:
                 "content": None
             })
 
-    def add_data(self, data: dict, html_url: str):
+    def add_data(self, data: dict):
         """新增数据"""
         with self.thread_lock:
             key_list = ["name", "url", "parentId", "type", "content"]
@@ -47,7 +47,7 @@ class NotebookServer:
             if data["type"] == NotebookType.NOTEBOOK:
                 self.db.insert(data)
             elif data["type"] == NotebookType.FOLDER:
-                data["url"] = "%s?parentId=%s" % (html_url, data["id"])
+                data["url"] = "/notebook.html?parentId=%s" % data["id"]
                 self.db.insert(data)
 
     def edit_data(self, nb_id: str, data: dict, html_url: str):

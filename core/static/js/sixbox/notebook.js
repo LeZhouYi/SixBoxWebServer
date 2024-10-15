@@ -208,7 +208,7 @@ tinymce.init({
     license_key: 'gpl',
     plugins: 'lists wordcount advlist code charmap insertdatetime preview',
     toolbar: toolbar,
-    height: '350px'
+    height: '600px'
 });
 
 document.getElementById('addCancelBtn').addEventListener('click', function () {

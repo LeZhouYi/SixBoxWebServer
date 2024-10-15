@@ -124,7 +124,7 @@ def add_bookmark():
                 BmDB.get(BmQuery.id == data["parentId"])
             except KeyError:
                 return route_utils.gen_fail_response(RepoInfo["010"])
-    BmServer.add_data(data, "/bookmark.html")
+    BmServer.add_data(data)
     return route_utils.gen_success_response(RepoInfo["008"])
 
 

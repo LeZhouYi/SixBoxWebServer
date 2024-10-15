@@ -82,7 +82,7 @@ def add_notebook():
     check_result = check_nb_data(data)
     if check_result is not None:
         return check_result
-    NbServer.add_data(data, "/notebook.html")
+    NbServer.add_data(data)
     return route_utils.gen_success_response(RepoInfo["005"])
 
 

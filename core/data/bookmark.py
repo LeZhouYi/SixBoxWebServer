@@ -36,7 +36,7 @@ class BookmarkServer:
                 "content": None
             })
 
-    def add_data(self, data: dict, html_url: str):
+    def add_data(self, data: dict):
         """新增数据"""
         with self.thread_lock:
             key_list = ["name", "url", "parentId", "type"]
@@ -47,7 +47,7 @@ class BookmarkServer:
             if data["type"] == BookmarkType.BOOKMARK:
                 self.db.insert(data)
             elif data["type"] == BookmarkType.FOLDER:
-                data["url"] = "%s?parentId=%s" % (html_url, data["id"])
+                data["url"] = "/bookmark.html?parentId=%s" % data["id"]
                 self.db.insert(data)
 
     def edit_data(self, bm_id: str, data: dict):
