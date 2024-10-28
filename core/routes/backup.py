@@ -1,19 +1,10 @@
-import io
-import os
-import sys
-import time
-import urllib
-import zipfile
 from random import Random
-from typing import Optional
 
-from flask import Blueprint, render_template, Response, request, stream_with_context
-from werkzeug.datastructures import FileStorage
+from flask import Blueprint, render_template, request, jsonify
 
 from core.config.config import get_config_path
 from core.data.backup import BackupServer
 from core.routes import route_utils
-from core.util import check_utils
 from core.util.base_utils import load_json_data
 
 BackupBp = Blueprint('backup', __name__)
@@ -37,6 +28,39 @@ def backup_page():
     return render_template("backup.html")
 
 
+@BackupBp.route("/backup/files", methods=["GET"])
+def get_backup_list():
+    """获取备份文件列表"""
+    parent_id = request.args.get("parendId", None, str)
+    bk_type = request.args.get("type", None, str)
+    search = request.args.get("search", None, str)
+    search_query = route_utils.combine_query(None, BkQuery.parentId == parent_id, parent_id)
+    search_query = route_utils.combine_query(search_query, BkQuery.type == bk_type, bk_type)
+    if search_query is None and search is None:
+        return jsonify([])
+    with BkServer.thread_lock:
+        if search_query is not None:
+            data = BkDB.search(search_query)
+        else:
+            data = BkDB.all()
+        if search is not None and len(data) > 0:
+            if len(search) < 2:
+                return jsonify([])
+            temp_data = []
+            search_lower = str(search).lower()
+            for item in data:
+                if str(item["name"]).lower().find(search_lower) >= 0:
+                    temp_data.append(item)
+            data = temp_data
+        data = sorted(data, key=BkServer.default_sort_key)
+    return jsonify(data)
+
+
+@BackupBp.route("/backup/files", methods=["POST"])
+def add_backup_file():
+    """新增备份文件"""
+    pass
+
 # @BackupBp.route("/backup", methods=["GET"])
 # def download_data():
 #     """下载所有数据"""
@@ -49,9 +73,9 @@ def backup_page():
 #     memory_zip.seek(0)
 #     response = Response(
 #         memory_zip.read(),
-#         mimetype='application/zip',
+#         mimetype='application/zip-js',
 #         headers={
-#             'Content-Disposition': 'attachment; filename=data.zip'
+#             'Content-Disposition': 'attachment; filename=data.zip-js'
 #         }
 #     )
 #     return response

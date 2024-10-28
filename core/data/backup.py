@@ -56,3 +56,8 @@ class BackupServer:
             elif data["type"] == FileType.FOLDER:
                 data["url"] = "/backup.html?parentId=%s" % data["id"]
                 self.db.insert(data)
+
+    @staticmethod
+    def default_sort_key(data):
+        """默认排序"""
+        return -int(data["type"]), data["name"]

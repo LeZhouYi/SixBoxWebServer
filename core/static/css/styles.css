@@ -650,7 +650,7 @@ body, html {
         border-radius: var(--base-radius);
         padding: var(--base-padding);
         background-color: var(--control-background);
-        z-index: 1;
+        z-index: 2;
     }
     /*默认模态弹窗内容*/
     .popupContent{
@@ -795,7 +795,7 @@ body, html {
         border-radius: var(--base-radius);
         padding: calc(var(--base-padding) / 2);
         background-color: var(--control-background);
-        z-index: 1;
+        z-index: 2;
         box-sizing: border-box;
     }
     /*默认模态弹窗内容*/
