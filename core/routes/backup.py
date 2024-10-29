@@ -1,6 +1,10 @@
+import os
+import time
 from random import Random
+from typing import Optional
 
 from flask import Blueprint, render_template, request, jsonify
+from werkzeug.datastructures import FileStorage
 
 from core.config.config import get_config_path
 from core.data.backup import BackupServer
@@ -59,7 +63,26 @@ def get_backup_list():
 @BackupBp.route("/backup/files", methods=["POST"])
 def add_backup_file():
     """新增备份文件"""
-    pass
+    if 'file' not in request.files:
+        return route_utils.gen_fail_response(RepoInfo["003"])
+    file = request.files.get("file")
+
+    if file is not None:
+        result = check_file_type(file)
+        # 文件格式不符合要求
+        if result is not None:
+            return result
+        file_ext = file.filename.rsplit('.', 1)[1]
+        local_name = "%s%s.%s" % (int(time.time()), str(BackupRand.randint(100, 999)), file_ext)
+        filename = file.filename
+        filepath = os.path.join(get_config_path("upload_file_path"), filename)
+        BkServer.add_data({
+            "name": filename,
+            "parentId": request.form.get("parentId"),
+            "url": "/backup/files/%s" % local_name
+        })
+    return route_utils.gen_fail_response(RepoInfo["003"])
+
 
 # @BackupBp.route("/backup", methods=["GET"])
 # def download_data():
@@ -81,11 +104,12 @@ def add_backup_file():
 #     return response
 #
 #
-# def check_file_type(file: Optional[FileStorage]):
-#     """检查文件类型"""
-#     file_types = BackupConfig["fileTypes"]
-#     if file.filename is None or file.filename.rsplit('.', 1)[1].lower() not in file_types:
-#         return route_utils.gen_fail_response(RepoInfo["001"])
+
+def check_file_type(file: Optional[FileStorage]):
+    """检查文件类型"""
+    file_types = BackupConfig["fileTypes"]
+    if file.filename is None or file.filename.rsplit('.', 1)[1].lower() not in file_types:
+        return route_utils.gen_fail_response(RepoInfo["001"])
 #
 #
 # @BackupBp.route("/backup", methods=["POST"])
