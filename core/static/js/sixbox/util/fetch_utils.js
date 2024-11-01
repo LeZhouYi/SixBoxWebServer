@@ -60,12 +60,7 @@ export function fetchFile(url){
         document.body.removeChild(a);
         // 释放ULR对象
         URL.revokeObjectURL(url);
-        return true;
     })
-    .catch(error => {
-        console.log(error);
-    });
-    return false;
 }
 
 export function fetchWithConfig(url, urlConfig){

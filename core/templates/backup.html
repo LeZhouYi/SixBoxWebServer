@@ -17,7 +17,7 @@
         <div class="pathBar paddingExtra">
             <a class="pathBarText" href="/home.html">首页</a><a class="pathBarText">&gt;备份</a>
         </div>
-        <div class="content marginExtra">
+        <div class="content marginExtra hidden">
             <div class="appContainer">
                 <div id="appDownData" class="appItem clickable">
                     <img src="static/images/icons/download.png">
@@ -37,16 +37,54 @@
                     <a>搜索</a>
                 </div>
             </div>
-            <div id="addBackUpButton" class="controlButton clickable">
+            <div id="addFileButton" class="controlButton clickable">
                 <a>新增文件</a>
             </div>
             <img id="backupMoreCtrlBtn" src="static/images/icons/more_vertical.png" class="musicCtrlIcon">
         </div>
-        <dl id="fbList" class="bmList marginExtra"></dl>
+        <dl id="bkList" class="bmList marginExtra"></dl>
     </div>
 </div>
 <div id="messagePopup" class="messagePopup hidden">
     <div id="messageContent" class="messageContent"></div>
+</div>
+<div id="backupCtrlPopup" class="popupOverlay hidden">
+    <div id="backupCtrlContent" class="controlContent">
+        <dl class="controlBtnList">
+            <dd><a id="downloadDataBtn">下载数据</a></dd>
+        </dl>
+    </div>
+</div>
+<div id="addFilePopup" class="popupOverlay hidden">
+    <div id="addFileContent" class="popupContent">
+        <div class="popupHeader">
+            <a class="headerText">上传文件</a>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer">
+            <div class="bmInputTextField">
+                <label class="bmInputLabel">文件名：</label>
+                <input type="text" id="addMscName" placeholder="请输入文件名"/>
+            </div>
+        </div>
+        <div class="bmInputContainer">
+            <div class="bmInputFileField">
+                <label class="bmInputLabel">文件：</label>
+                <input type="file" id="addMscFile" placeholder="请选择文件" class="clickable hidden" accept="audio/mpeg"/>
+                <label for="addMscFile" class="controlButton clickable">选择文件</label>
+                <input type="text" id="addFileText" placeholder="请选择文件" disabled>
+            </div>
+        </div>
+        <div class="bmInputSpan"></div>
+        <div class="bmInputContainer gapDefault">
+            <div id="addFileCfmBtn" class="controlButton clickable">
+                <a>确认</a>
+            </div>
+            <div id="addFileCclBtn" class="controlButton clickable">
+                <a>取消</a>
+            </div>
+        </div>
+    </div>
 </div>
 <script type="module" src="{{url_for('static', filename='js/sixbox/backup.js')}}"></script>
 </body>

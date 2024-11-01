@@ -15,6 +15,7 @@ from core.data.backup import BackupServer, FileType
 from core.routes import route_utils
 from core.routes.route_utils import extra_data
 from core.util.base_utils import load_json_data
+from core.util.check_utils import is_empty, is_str_empty
 
 BackupBp = Blueprint('backup', __name__)
 BackupRand = Random()
@@ -26,14 +27,15 @@ BkQuery = BkServer.bk_query
 
 RepoInfo = {
     "001": "文件格式错误",
-    "002": "上传成功",
+    "002": "新增成功",
     "003": "文件不能为空",
     "004": "文件不存在",
     "005": "文件夹不存在",
     "006": "保存文件失败",
     "007": "删除文件成功",
     "008": "文件名不能为空",
-    "009": "编辑成功"
+    "009": "编辑成功",
+    "010": "文件夹名不能为空"
 }
 
 
@@ -55,11 +57,13 @@ def get_backup_list():
     # 获取搜索参数
     parent_id = request.args.get("parentId", None, str)
     bk_type = request.args.get("type", None, str)
+    file_id = request.args.get("id", None, str)
     search = request.args.get("search", None, str)
 
     # 构造搜索语句并判断，阻止无条件搜索
     search_query = route_utils.combine_query(None, BkQuery.parentId == parent_id, parent_id)
     search_query = route_utils.combine_query(search_query, BkQuery.type == bk_type, bk_type)
+    search_query = route_utils.combine_query(search_query, BkQuery.id == file_id, file_id)
     if search_query is None and search is None:
         return jsonify([])
 
@@ -90,6 +94,31 @@ def get_backup_list():
                 ])
             )
     return jsonify(return_data)
+
+
+@BackupBp.route("/backup/folders", methods=["POST"])
+def add_backup_folder():
+    """新增文件夹"""
+    data = request.json
+    # 检查文件夹名
+    if is_str_empty(data, "name"):
+        return route_utils.gen_fail_response(RepoInfo["010"])
+
+    # 检查文件夹是否存在
+    if is_str_empty(data, "parentId"):
+        return route_utils.gen_fail_response(RepoInfo["005"])
+    parent_id = data["parentId"]
+    with BkServer.thread_lock:
+        try:
+            BkDB.get(BkQuery.parentId == parent_id)
+        except KeyError:
+            return route_utils.gen_fail_response(RepoInfo["005"])
+    BkServer.add_data({
+        "name": data["name"],
+        "parentId": parent_id,
+        "type": FileType.FOLDER
+    })
+    return route_utils.gen_success_response(RepoInfo["002"])
 
 
 @BackupBp.route("/backup/files", methods=["POST"])
@@ -146,7 +175,7 @@ def add_backup_file():
 def delete_backup_files(file_id: str):
     """删除备份文件/文件夹"""
     # 检查文件ID是否存在
-    if file_id is None or file_id == "":
+    if is_empty(file_id):
         return route_utils.gen_fail_response(RepoInfo["004"])
     try:
         with BkServer.thread_lock:
@@ -171,7 +200,7 @@ def delete_backup_files(file_id: str):
 @BackupBp.route("/backup/files/<file_id>", methods=["PUT"])
 def edit_backup_file(file_id: str):
     # 检查文件ID是否存在
-    if file_id is None or file_id == "":
+    if is_empty(file_id):
         return route_utils.gen_fail_response(RepoInfo["004"])
     try:
         with BkServer.thread_lock:
@@ -181,9 +210,9 @@ def edit_backup_file(file_id: str):
 
     # 检查文件名和所属文件夹
     data = request.json
-    if "name" not in data or data["name"] == "":
+    if is_str_empty(data, "name"):
         return route_utils.gen_fail_response(RepoInfo["008"])
-    if "parentId" not in data or data["parentId"] == "":
+    if is_str_empty(data, "parentId"):
         return route_utils.gen_fail_response(RepoInfo["005"])
     parent_id = data["parentId"]
     with BkServer.thread_lock:
@@ -212,9 +241,9 @@ def download_data():
     # 构造返回
     response = Response(
         memory_zip.read(),
-        mimetype='application/zip-js',
+        mimetype='application/zip',
         headers={
-            'Content-Disposition': 'attachment; filename=data.zip-js'
+            'Content-Disposition': 'attachment; filename=data.zip'
         }
     )
     return response
@@ -242,6 +271,6 @@ def download_backup_file(filename: str):
 
     return Response(stream_with_context(generate()),
                     headers={
-                        "Content-Disposition": "attachment;filename=%s" % urllib.parse.quote(filename),
+                        "Content-Disposition": "attachment;filename=%s" % urllib.parse.quote(data["name"]),
                         "Transfer-Encoding": "chunked"
                     })

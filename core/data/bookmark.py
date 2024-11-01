@@ -29,7 +29,7 @@ class BookmarkServer:
     def init(self):
         if len(self.db.all()) == 0:
             self.db.insert({
-                "id": 1,
+                "id": "1",
                 "name": "根目录",
                 "url": "/bookmark.html?parentId=1",
                 "type": BookmarkType.FOLDER,

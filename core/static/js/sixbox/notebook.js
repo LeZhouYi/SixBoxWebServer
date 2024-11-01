@@ -388,18 +388,18 @@ document.getElementById('searchNbInput').addEventListener('keydown', function(){
 
 document.getElementById('downloadPDFBtn').addEventListener('click', function(){
     /*下载PDF*/
-    console.log("test");
     if (nowControlId == null){
         ModalUtils.displayFailMessage("请先选择笔记");
     }
     ModalUtils.hideModal('nbControlPopup');
     let downDataUrl = nowRoute + "/" + nowControlId + "/pdf";
-    if (FetchUtils.fetchFile(downDataUrl)){
-        ModalUtils.displaySuccessMessage('正在下载');
-    }
-    else{
+    ModalUtils.displaySuccessMessage('正在下载');
+    FetchUtils.fetchFile(downDataUrl).then(()=>{
+        ModalUtils.displaySuccessMessage('正在成功');
+    })
+    .catch(error=>{
         ModalUtils.displayFailMessage('下载失败');
-    }
+    })
 });
 
 document.addEventListener('keydown', function(event){
