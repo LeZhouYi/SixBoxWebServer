@@ -57,6 +57,15 @@ class BackupServer:
                 data["url"] = "/backup.html?parentId=%s" % data["id"]
                 self.db.insert(data)
 
+    def edit_data(self, file_id: str, data: dict):
+        with self.thread_lock:
+            key_list = ["name", "parentId"]
+            data = data_utils.extra_data(data, key_list)
+            now_data = self.db.get(self.bk_query.id == file_id)
+            if not ("parentId" in data and data["parentId"] != ""):
+                data["parentId"] = now_data["parentId"]
+            self.db.update(data_utils.extra_data(data, key_list), (self.bk_query.id == file_id))
+
     @staticmethod
     def default_sort_key(data):
         """默认排序"""
